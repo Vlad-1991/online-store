@@ -1,0 +1,27 @@
+[
+  {
+    "plumbing": {
+      "text": "Plumbing"
+    }
+  },
+  {
+    "lab_and_scientific": {
+      "text": "Lab & Scientific"
+    }
+  },
+  {
+    "hand_tools": {
+      "text" : "Hand Tools"
+    }
+  },
+  {
+    "optics": {
+      "text":  "Optics"
+    }
+  },
+  {
+    "safety": {
+      "text": "Safety"
+    }
+  }
+]
