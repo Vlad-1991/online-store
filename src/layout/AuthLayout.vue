@@ -1,6 +1,7 @@
 <template lang="pug">
-  div.container
-    router-view
+  div.auth-container
+    div.auth
+      router-view
 </template>
 
 <script setup lang="ts">

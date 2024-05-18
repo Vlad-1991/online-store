@@ -6,6 +6,11 @@ import Help from "@/views/Help.vue";
 import About from "@/views/About.vue";
 import Cart from "@/views/Cart.vue";
 import Product from "@/views/Product.vue";
+import Checkout from "@/views/Checkout.vue";
+import AuthLayout from "@/layout/AuthLayout.vue";
+import Signin from "@/views/Signin.vue";
+import Signup from "@/views/Signup.vue";
+import ForgotPassword from "@/views/ForgotPassword.vue";
 
 
 const routes: Array<RouteRecordRaw> = [
@@ -62,7 +67,44 @@ const routes: Array<RouteRecordRaw> = [
       layout: MainLayout,
       auth: false
     }
+  },
+  {
+    path: '/checkout',
+    name: 'Checkout',
+    component: Checkout,
+    meta: {
+      layout: MainLayout,
+      auth: false
+    }
+  },
+  {
+    path: '/signin',
+    name: 'Signin',
+    component: Signin,
+    meta: {
+      layout: AuthLayout,
+      auth: false
+    }
+  },
+  {
+    path: '/signup',
+    name: 'Signup',
+    component: Signup,
+    meta: {
+      layout: AuthLayout,
+      auth: false
+    }
+  },
+  {
+    path: '/forgot',
+    name: 'Forgot Password',
+    component: ForgotPassword,
+    meta: {
+      layout: AuthLayout,
+      auth: false
+    }
   }
+
 ]
 
 const router = createRouter({

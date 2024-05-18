@@ -5,5 +5,6 @@ import App from './App.vue'
 import router from './router'
 import './theme.css'
 import FontAwesomePlugin from "./plugins/FontAwesome"
+export const BESTSELLER_COUNT = 10
 
 createApp(App).use(router).use(pinia).use(FontAwesomePlugin).mount('#app')

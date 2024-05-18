@@ -6,12 +6,13 @@
 <script setup lang="ts">
 
 import {useRoute} from "vue-router";
-import AuthLayout from "@/layout/AuthLayout.vue";
-import MainLayout from "@/layout/MainLayout.vue";
+import {useUiStore} from "@/stores/UiStore";
+import {computed, ref} from "vue";
 
 const route = useRoute()
 
-let layout = MainLayout
+let layout = computed(() => route.meta.layout)
+
 
 
 </script>

@@ -21,8 +21,8 @@ body {
     -moz-osx-font-smoothing: grayscale;
     font-size: 16px;
     color: var(--main-grey);
-    background: white;
-
+    background: var(--main-lightblue);
+    margin: 0;
 }
 
 hr {
@@ -40,6 +40,11 @@ ul {
     line-height: 1.7;
 }
 
+input {
+    margin: 0;
+    padding: 0;
+}
+
 a {
     /*color: #3eaf7c;*/
     color: var(--main-grey);
@@ -55,6 +60,8 @@ h5,
 h6 {
     font-weight: 500;
     line-height: 1.45;
+    padding: 0;
+
 }
 
 h1 {
@@ -64,13 +71,15 @@ h1 {
 
 h2 {
     font-size: 1.65rem;
-    padding-bottom: 0.3rem;
-    border-bottom: 1px solid #eaecef;
+    /*padding-bottom: 0.3rem;*/
+    /*border-bottom: 1px solid #eaecef;*/
 }
 
 h3 {
     font-size: 1.35rem;
 }
+
+
 
 /*.primary {*/
 /*    color: #42b983;*/
@@ -88,16 +97,16 @@ h3 {
     width: fit-content;
     border-radius: 10px;
     letter-spacing: 0.05em;
-    border: 1px solid #42b983;
+    border: 1px solid var(--main-grey);
     text-decoration: none;
     /*text-transform: uppercase;*/
-    margin-right: 10px;
     padding: 0.5rem 1.5rem;
     white-space: nowrap;
     font-weight: 700;
     outline: none;
     background: #fff;
     transition: all 0.22s;
+    font-size: 1.2rem;
 }
 
 .btn:hover {
@@ -120,6 +129,18 @@ h3 {
 .btn.primary {
     background: #42b983;
     color: #fff;
+}
+
+.btn.main {
+    background: #2a73bb;
+    color: #fff;
+    font-size: 1rem;
+}
+
+.btn.white {
+    background: #fff;
+    color: var(--main-grey);
+    font-size: 1rem;
 }
 
 .btn.danger {
@@ -147,6 +168,18 @@ h3 {
     margin-bottom: calc(2 * var(--offset));
     /*height: 50vw;*/
     min-height: 100vh;
+}
+
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.auth {
+    width: 500px;
+
 }
 
 .pt-2 {
@@ -189,6 +222,7 @@ h3 {
 .form-control.invalid input {
     border-color: #e53935;
 }
+
 
 .form-checkbox {
     margin-bottom: 1rem;
@@ -307,7 +341,7 @@ h3 {
 
 .modal {
     position: fixed;
-    top: 60px;
+    top: 40%;
     width: 600px;
     padding: 1rem;
     background: #fff;
@@ -473,14 +507,18 @@ h3 {
 .table {
     width: 100%;
     border-collapse: collapse;
+    border: 1px solid var(--main-grey);
+    margin: 20px auto;
 }
 
 .table th {
     padding: .5rem 1rem;
+    border: 1px solid var(--main-grey);
 }
 
 .table td {
     padding: .5rem 1rem;
+    border: 1px solid var(--main-grey);
 }
 
 .table tbody td {
@@ -607,6 +645,7 @@ h3 {
     /*display: flex;*/
     flex-direction: column;
     padding: 0 20px;
+    background-color: white;
 }
 
 .flex-row{
@@ -628,16 +667,18 @@ h3 {
 .card-flex{
     border: 1px grey solid;
     border-radius: 7px;
+    box-shadow: 5px 5px 10px 0px rgba(0,0,0,0.5);
 }
 
 .card-body-my{
     height: 400px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     column-gap: 10px;
-    h3, div, hr, a{
+
+    h3, div, a{
         margin: 10px;
     }
     button{
@@ -689,4 +730,219 @@ h3 {
 
 .add_to_cart {
     font-size: 1.5rem;
+}
+
+.flex-box {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    row-gap: 20px;
+}
+
+.btn_cart {
+    min-width: 2rem;
+    min-height: 2rem;
+    background-color: transparent;
+    border-color: var(--main-grey);
+}
+
+.btn_cart_input {
+    min-width: 2rem;
+    min-height: 2rem;
+    border-left: none;
+    border-right: none;
+    border-color: var(--main-grey);
+    text-align: center;
+}
+
+
+
+.cart_flex {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    column-gap: 40px;
+}
+
+.mw100{
+    min-width: 100px;
+}
+
+.price {
+    margin-bottom: 0;
+}
+
+.price_sum {
+    color: var(--main-grey);
+    text-underline: #2c3e50;
+    display: inline-block;
+    margin: 0;
+    margin-left: 10px;
+    padding: 0;
+}
+
+.inline-block {
+    margin: 0;
+    margin-left: 10px;
+    padding: 0;
+    display: inline-block;
+}
+
+.right {
+    text-align: right;
+}
+
+.left {
+    text-align: left;
+}
+
+.center {
+    text-align: center;
+}
+
+.btn_inline_block {
+    display: inline-block;
+    float: right;
+
+}
+
+.form-checkout{
+    margin: 20px auto;
+}
+
+.package{
+    font-size: 1.4rem;
+}
+
+.flex-buttons{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+}
+
+fieldset {
+    margin-bottom: 10px;
+}
+
+.rating {
+    font-weight: bold;
+}
+
+.reviews {
+    margin-left: 20px;
+    font-weight: normal;
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+
+.reviews:hover {
+    color: red;
+}
+
+.reviews-block {
+    margin-top: 20px;
+}
+
+.review-card {
+    margin-bottom: 10px;
+    padding: 10px;
+    div, h5 {
+        margin: 0;
+        padding: 10px;
+    }
+}
+
+.flex-reviews{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    column-gap: 20px;
+}
+
+.reviews-50 {
+    width: calc(100% / var(--columns) * 6 - var(--offset));
+    margin: var(--offset_one_side);
+    box-sizing: border-box;
+}
+
+.mb10 {
+    margin-bottom: 10px;
+}
+
+.mb50 {
+    margin-bottom: 50px;
+}
+
+.mt10 {
+    margin-top: 10px;
+}
+
+.mr10 {
+    margin-right: 10px;
+}
+
+.mr20 {
+    margin-right: 20px;
+}
+
+.rating-star{
+    font-size: 1.3rem;
+    margin-right: 5px;
+}
+
+.review-textarea {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    resize: none;
+    display: block;
+    outline: none;
+    font-size: 1.1rem;
+    width: 100%;
+    height: 200px;
+}
+
+.review-textarea:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.show-bestseller {
+    margin-top: 50px;
+}
+
+.show-bestseller{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.show-bestseller input{
+    margin-right: 10px;
+}
+
+.gallery-wrap{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+}
+
+.form-control small {
+    margin: 0;
+    padding: 0;
+}
+
+.link {
+    font-weight: normal;
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.subcat {
+    margin-left: 20px;
 }
