@@ -2,22 +2,7 @@
   div.wrapper
     the-navbar
     div.container.with-nav
-      div(class="category-side")
-        h1 Categories
-        ul(class="list list-default")
-          li(v-for="category in categories" :key="Object.keys(category)[0]" class="li-border")
-            router-link.category(:to="`/catalog?category=${Object.keys(category)[0]}`"
-              :class="$route.query.category === Object.keys(category)[0] ? 'active_category' : ''") {{category[Object.keys(category)[0]].text}}
-
-            li.subcat(v-for="subcat in category[Object.keys(category)[0]].subcategory" :key="subcat.url")
-              router-link.category(:to="`/catalog?category=${Object.keys(category)[0]}&subcategory=${subcat.url}`"
-                :class="$route.query.subcategory === subcat.url ? 'active_category' : ''") {{subcat.text}}
-
-          li.show-bestseller(v-if="checkboxBestSeller")
-            input(type="checkbox" id="bestseller" v-model="showBestseller" @click="changeShowBestsellers()")
-            label(for="bestseller") Bestseller
-      div(class="main-side")
-        TheBreadCrumbs(:breadcrumbsVal="breadcrumbs")
+        TheBreadCrumbs.breadcrumbs.mt20(:breadcrumbsVal="breadcrumbs")
         router-view
     div(class="footer") Footer
 </template>
@@ -37,18 +22,20 @@ const CartStore = useCartStore()
 
 await cartInit()
 
-const showBestseller = ref<boolean>(false) // value of checkbox bestseller
-const checkboxBestSeller = ref<boolean>(false) // show checkbox on left sidebar
+// const showBestseller = ref<boolean>(false) // value of checkbox bestseller
+// const checkboxBestSeller = ref<boolean>(false) // show checkbox on left sidebar
 
-let categories = [Object]
-categories = await fetch('/categories.json')
-    .then(response => response.json())
 
-categories.sort((a, b) => a.category > b.category ? 1 : -1);
+let response = await fetch('/categories.json')
+     .then(response => response.json())
 
-const changeShowBestsellers = () => {
-  UiStore.changeShowBestsellers()
-}
+response.sort((a, b) => Object.keys(a)[0] > Object.keys(b)[0] ? 1 : -1)
+
+UiStore.pushCategories(response)
+
+let categories = UiStore.getAllCategories
+
+
 
 let cur_prod_name = ref()
 
@@ -94,11 +81,11 @@ const categoriesInfo = ref({cat: '', subcat: ''})
 
 let breadcrumbs = computed(() => {
       if (route.name !== 'Home' && !route.query.category && route.name !== 'Product') {
-        checkboxBestSeller.value = false
+       // checkboxBestSeller.value = false
         return "Home > " + route.name
       }else if (route.name === 'Catalog' && route.query.subcategory) {
 
-        checkboxBestSeller.value = true
+       // checkboxBestSeller.value = true
         getCategoryAndSubcategory()
         categoriesInfo.value.cat = UiStore.getCategory
         categoriesInfo.value.subcat = UiStore.getSubcategory
@@ -108,15 +95,15 @@ let breadcrumbs = computed(() => {
         return "Home > " + route.name + " > " + categoriesInfo.value.cat + " > " + categoriesInfo.value.subcat
       } else if (route.name === 'Catalog' && route.query.category) {
 
-        checkboxBestSeller.value = true
+      //  checkboxBestSeller.value = true
         getCategoryAndSubcategory()
         categoriesInfo.value.cat = UiStore.getCategory
         categoriesInfo.value.subcat = UiStore.getSubcategory
 
         return "Home > " + route.name + " > " + categoriesInfo.value.cat
       } else if (route.name === 'Product' && route.params.id) {
-        checkboxBestSeller.value = false
-        console.log(categories)
+        // checkboxBestSeller.value = false
+        // console.log(categories)
         return "Home > " + route.name + " > " + UiStore.getCategory + " > " + UiStore.getSubcategory + " > " + cur_prod_name.value
       }
     }

@@ -1,0 +1,14 @@
+<template lang="pug">
+  div.form-control.w20.mb20
+    label(for="sorting") Sort By:
+    select(id="sorting" @change="$emit('sorting', $event.target.value)")
+      option(disabled selected value) -- select an option --
+      option(value="sortAZ")  A-Z Name
+      option(value="sortBestsellers") Bestsellers
+      option(value="sortPriceLowToHigh") Price: Low to High
+      option(value="sortPriceHighToLow") Price: High to Low
+</template>
+
+<script setup lang="ts">
+const emit = defineEmits(['sorting'])
+</script>

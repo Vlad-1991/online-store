@@ -6,13 +6,21 @@ export const useUiStore = defineStore("UiStore", {
             return {
                 showBestsellers: false,
                 cat: '',
-                subcat: ''
+                subcat: '',
+                categories: [],
+                checkboxBestSeller: false
         }
 
     },
     getters: {
         getShowBestsellers(): boolean {
                 return this.showBestsellers
+        },
+        getAllCategories(): [] | never[] {
+            return this.categories
+        },
+        getCheckboxBestSeller(): boolean {
+            return this.checkboxBestSeller
         },
         getCategory(): string {
             return this.cat
@@ -28,6 +36,9 @@ export const useUiStore = defineStore("UiStore", {
         writeCategoryInfo(categoryInfo: {cat: string, subcat: string }): void{
             this.cat = categoryInfo.cat
             this.subcat = categoryInfo.subcat
+        },
+        pushCategories(categories: []): void{
+            this.categories = categories
         }
     }
 })

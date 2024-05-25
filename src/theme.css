@@ -22,6 +22,7 @@ body {
     font-size: 16px;
     color: var(--main-grey);
     background: var(--main-lightblue);
+    /*background: #2c3e50;*/
     margin: 0;
 }
 
@@ -149,6 +150,12 @@ h3 {
     border-color: #e53935;
 }
 
+.btn.orange {
+    background: #e55e35;
+    color: #fff;
+    border-color: #e55e35;
+}
+
 .btn.warning {
     background: #c25205;
     color: #fff;
@@ -158,15 +165,14 @@ h3 {
 .container {
     margin: 0 auto;
    /* width: 1200px;*/
-
 }
+
 
 .container.with-nav {
     margin-top: 70px;
-    display: flex;
     position: relative;
     margin-bottom: calc(2 * var(--offset));
-    /*height: 50vw;*/
+    width: 100%;
     min-height: 100vh;
 }
 
@@ -365,7 +371,6 @@ h3 {
 
 
 
-
 .loader {
     font-size: 10px;
     margin: 50px auto;
@@ -373,12 +378,12 @@ h3 {
     width: 11em;
     height: 11em;
     border-radius: 50%;
-    background: #ffffff;
-    background: -moz-linear-gradient(left, #ffffff 10%, rgba(255, 255, 255, 0) 42%);
-    background: -webkit-linear-gradient(left, #ffffff 10%, rgba(255, 255, 255, 0) 42%);
-    background: -o-linear-gradient(left, #ffffff 10%, rgba(255, 255, 255, 0) 42%);
-    background: -ms-linear-gradient(left, #ffffff 10%, rgba(255, 255, 255, 0) 42%);
-    background: linear-gradient(to right, #ffffff 10%, rgba(255, 255, 255, 0) 42%);
+    background: var(--main-grey);
+    background: -moz-linear-gradient(left, var(--main-grey) 10%, rgba(255, 255, 255, 0) 42%);
+    background: -webkit-linear-gradient(left, var(--main-grey) 10%, rgba(255, 255, 255, 0) 42%);
+    background: -o-linear-gradient(left, var(--main-grey) 10%, rgba(255, 255, 255, 0) 42%);
+    background: -ms-linear-gradient(left, var(--main-grey) 10%, rgba(255, 255, 255, 0) 42%);
+    background: linear-gradient(to right, var(--main-grey) 10%, rgba(255, 255, 255, 0) 42%);
     position: relative;
     -webkit-animation: load3 1.4s infinite linear;
     animation: load3 1.4s infinite linear;
@@ -389,7 +394,7 @@ h3 {
 .loader:before {
     width: 50%;
     height: 50%;
-    background: #ffffff;
+    background: var(--main-grey);
     border-radius: 100% 0 0 0;
     position: absolute;
     top: 0;
@@ -397,7 +402,7 @@ h3 {
     content: '';
 }
 .loader:after {
-    background: #2c3e50;
+    background: white;
     width: 75%;
     height: 75%;
     border-radius: 50%;
@@ -530,6 +535,9 @@ h3 {
 }
 
 .breadcrumbs {
+    /*z-index: 5000;*/
+    position: relative;
+    left: 10px;
     margin-top: .5rem;
 }
 
@@ -621,7 +629,9 @@ h3 {
     background-color: aliceblue;
     padding-left: 20px;
     padding-right: 20px;
+    padding-bottom: 20px;
     left: 0;
+    top: 100px;
 }
 
 .main-side {
@@ -631,6 +641,7 @@ h3 {
     left: 20%;
     padding-left: 10px;
     padding-right: 10px;
+    text-align: left;
 }
 
 .footer {
@@ -642,10 +653,11 @@ h3 {
 
 .wrapper {
     position: relative;
-    /*display: flex;*/
+    display: flex;
     flex-direction: column;
     padding: 0 20px;
     background-color: white;
+    /*background: #2c3e50;*/
 }
 
 .flex-row{
@@ -730,6 +742,7 @@ h3 {
 
 .add_to_cart {
     font-size: 1.5rem;
+
 }
 
 .flex-box {
@@ -790,6 +803,10 @@ h3 {
     display: inline-block;
 }
 
+.block {
+    display: block;
+}
+
 .right {
     text-align: right;
 }
@@ -800,6 +817,13 @@ h3 {
 
 .center {
     text-align: center;
+    margin: 0 auto;
+}
+
+.float-right{
+    float: right;
+    font-size: 20px;
+    cursor: pointer;
 }
 
 .btn_inline_block {
@@ -845,7 +869,7 @@ fieldset {
 }
 
 .reviews-block {
-    margin-top: 20px;
+    margin-top: 50px;
 }
 
 .review-card {
@@ -874,12 +898,24 @@ fieldset {
     margin-bottom: 10px;
 }
 
+.mb20 {
+    margin-bottom: 20px;
+}
+
 .mb50 {
     margin-bottom: 50px;
 }
 
 .mt10 {
     margin-top: 10px;
+}
+
+.mt20 {
+    margin-top: 20px;
+}
+
+.mt50 {
+    margin-top: 50px;
 }
 
 .mr10 {
@@ -945,4 +981,14 @@ fieldset {
 
 .subcat {
     margin-left: 20px;
+}
+
+
+.w20 {
+    width: 20%;
+}
+
+.searchquery {
+    width: 100%;
+    display: block;
 }

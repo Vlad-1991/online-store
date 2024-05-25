@@ -1,5 +1,5 @@
 <template lang="pug">
-  div(:id="galleryID")
+  div(:id="galleryID" )
     a(
         v-for="(image, key) in imagesData"
         :key="key"
@@ -8,7 +8,7 @@
         :data-pswp-height="image.height"
         target="_blank"
         rel="noreferrer")
-      img(:src="imagesData[0].largeURL" alt="" v-if="key === 0")
+      img(:src="imagesData[0].largeURL" alt="" v-if="key === 0" @load="$emit('imgLoaded')")
 </template>
 
 <script setup lang="ts">
@@ -20,6 +20,8 @@ const props = defineProps<{
   galleryID: string,
   images: []
 }>()
+
+const emit = defineEmits(['imgLoaded'])
 
 let lightbox
 

@@ -1,67 +1,74 @@
 <template lang="pug">
-  div(v-if="!showReviews")
-    div.product(v-if="product")
-      h1 {{ product[Object.keys(product)].name }}
-      div.rating Rating {{product[Object.keys(product)].rating}} of {{MAX_RATING}}
-        span.reviews(@click="showReviews = true") {{product[Object.keys(product)].reviews.length}} Reviews
-      div.image_card
-        div
-          SimpleGallery(galleryID="my-test-gallery-primary" :images="product[Object.keys(product)].image" class="card-image")
-          //img(:src="product[Object.keys(product)].image[0].largeURL" class="card-image")
-        div.flex-box
-          h2.price ${{product[Object.keys(product)].price}}
+  CategorySide.category-side(:categories="UiStore.getAllCategories" :checkboxBestSeller="UiStore.getCheckboxBestSeller").mt20
+  div.main-side.mt20
+    div(v-if="!showReviews")
+      div.product(v-if="product")
+        h1 {{ product[Object.keys(product)].name }}
+        div.rating Rating {{product[Object.keys(product)].rating}} of {{MAX_RATING}}
+          span.reviews(@click="showReviews = true") {{product[Object.keys(product)].reviews.length}} Reviews
+        div.image_card
           div
-            button.btn_cart(@click="decrease") -
-            input.btn_cart_input(type="number" min="1" max="100" step="1" pattern="[0-9]{3}" v-model="cart_qty" @input="onInput($event.target.value)")
-            button.btn_cart(@click="increase") +
-          span
-            button.btn.danger.add_to_cart(@click="addCart()") Add to Cart
-            h3.price_sum(v-if="cart_qty > 1") Summary: ${{(cart_qty * parseFloat(product[Object.keys(product)].price)).toFixed(2)}}
-            h3.inline-block(v-if="message_overload") Max count of this position is 100
-            h3.primary.inline-block(v-if="product_added") Product added to Cart
-      div.description(v-html="product[Object.keys(product)].description")
-    div(v-else)
-      h1 There are no this product
-      router-link(to="/catalog") Back to Catalog
-  div.reviews-block(v-else)
-    div(v-if="AuthStore.isAuthentificated")
-    h1 Reviews
-    div.flex-reviews
-      div.reviews-50
-        div.card-flex.review-card(v-for="review in product[Object.keys(product)].reviews")
-          div.bold {{review.username}}
-          h5 {{review.date}}
-          div {{review.text}}
-      div.reviews-50(v-if="AuthStore.isAuthentificated")
-        div(v-if="reviewSended")
-          h3 You have already left a review or rating on this product
-        div(v-else)
-          div.mb10.rating-star Push your rating
-          span.rating-star
-            input(type="radio" id="0stars" value="0" v-model="ratingVote")
-            label(for="0stars")  0
-          span.rating-star
-            input(type="radio" id="1star" value="1" v-model="ratingVote")
-            label(for="1star")  1
-          span.rating-star
-            input(type="radio" id="0stars" value="2" v-model="ratingVote")
-            label(for="2stars")  2
-          span.rating-star
-            input(type="radio" id="1star" value="3" v-model="ratingVote")
-            label(for="3star")  3
-          span.rating-star
-            input(type="radio" id="0stars" value="4" v-model="ratingVote")
-            label(for="4stars")  4
-          span.rating-star
-            input(type="radio" id="0stars" value="5" v-model="ratingVote")
-            label(for="5stars")  5
-          div.mt10.rating-star
-            label(for="review-area") Your review for this product (Optional)
-            textarea.review-textarea.mt10(placeholder="Write review... 300 symbols max" id="review-area" v-model="reviewText" )
-          button.btn.main.mt10(:disabled="!ratingVote" @click="sendReview(product[Object.keys(product)].id, reviewText, ratingVote)") Send review
+            div(v-if="loading").loader
+            SimpleGallery(galleryID="my-test-gallery-primary" :images="product[Object.keys(product)].image" class="card-image" @imgLoaded="toChangeLoader")
+          div.flex-box
+            h2.price ${{product[Object.keys(product)].price}}
+            div
+              button.btn_cart(@click="decrease") -
+              input.btn_cart_input(type="number" min="1" max="100" step="1" pattern="[0-9]{3}" v-model="cart_qty" @input="onInput($event.target.value)")
+              button.btn_cart(@click="increase") +
+            span
+              button.btn.danger.add_to_cart(@click="addCart()") Add to Cart
+              h3.inline-block.price_sum(v-if="cart_qty > 1") Summary: ${{(cart_qty * parseFloat(product[Object.keys(product)].price)).toFixed(2)}}
+              h3.inline-block(v-if="message_overload") Max count of this position is 100
+              h3.primary.inline-block(v-if="product_added") Product added to Cart
+              button.btn.orange.add_to_cart.block.mt20(@click="modal = true") Buy Now
+        div.description(v-html="product[Object.keys(product)].description")
       div(v-else)
-        span.mr10 To send rating and review please
-        button.main.btn Sign In
+        h1 There are no this product
+        router-link(to="/catalog") Back to Catalog
+    div.reviews-block(v-else)
+      div(v-if="AuthStore.isAuthentificated")
+      h1 Reviews
+      div.flex-reviews
+        div.reviews-50
+          div.card-flex.review-card(v-for="review in product[Object.keys(product)].reviews")
+            div.bold {{review.username}}
+            h5 {{review.date}}
+            div {{review.text}}
+        div.reviews-50(v-if="AuthStore.isAuthentificated")
+          div(v-if="reviewSended")
+            h3 You have already left a review or rating on this product
+          div(v-else)
+            div.mb10.rating-star Push your rating
+            span.rating-star
+              input(type="radio" id="0stars" value="0" v-model="ratingVote")
+              label(for="0stars")  0
+            span.rating-star
+              input(type="radio" id="1star" value="1" v-model="ratingVote")
+              label(for="1star")  1
+            span.rating-star
+              input(type="radio" id="0stars" value="2" v-model="ratingVote")
+              label(for="2stars")  2
+            span.rating-star
+              input(type="radio" id="1star" value="3" v-model="ratingVote")
+              label(for="3star")  3
+            span.rating-star
+              input(type="radio" id="0stars" value="4" v-model="ratingVote")
+              label(for="4stars")  4
+            span.rating-star
+              input(type="radio" id="0stars" value="5" v-model="ratingVote")
+              label(for="5stars")  5
+            div.mt10.rating-star
+              label(for="review-area") Your review for this product (Optional)
+              textarea.review-textarea.mt10(placeholder="Write review... 300 symbols max" id="review-area" v-model="reviewText" )
+            button.btn.main.mt10(:disabled="!ratingVote" @click="sendReview(product[Object.keys(product)].id, reviewText, ratingVote)") Send review
+        div(v-else)
+          span.mr10 To send rating and review please
+          button.main.btn Sign In
+
+  teleport(to="body")
+    modal-quick-order(v-if="modal" title="Quick Order" @close="modal = false" :product="product[Object.keys(product)]" :qty="cart_qty")
+
 
 </template>
 
@@ -72,11 +79,15 @@ import {onMounted, reactive, ref} from "vue";
 import {useRoute} from "vue-router";
 import SimpleGallery from "@/components/ui/SimpleGallery.vue";
 import {useUiStore} from "@/stores/UiStore";
+import CategorySide from "@/components/ui/CategorySide.vue";
+import ModalQuickOrder from "@/components/ui/ModalQuickOrder.vue";
 const route = useRoute()
 
 const CartStore = useCartStore()
 const AuthStore = useAuthStore()
 const UiStore = useUiStore()
+const loading = ref(true)
+const modal = ref(false)
 
 const cart_qty = ref<number>(1)
 
@@ -121,7 +132,7 @@ const sendReview = (id: string, reviewText: string, ratingVote: string) => {
   }
 
 
-  console.log(updatedProduct)
+  // console.log(updatedProduct)
 
 }
 
@@ -152,7 +163,7 @@ function addCart (){
       product_added.value = false
     }, 3000)
 
-    console.log('product added')
+    // console.log('product added')
 
   }
 }
@@ -189,7 +200,7 @@ let products = await fetch('/catalog.json')
 
 product = products[0]
 
-console.log(product[Object.keys(product)])
+// console.log(product[Object.keys(product)])
 
 const reviewSended = ref<boolean>(false)
 
@@ -227,6 +238,9 @@ let writeCategoryAndSubcategory = () => {
 
 writeCategoryAndSubcategory()
 
+const toChangeLoader = () => {
+  loading.value = false
+}
 //console.log(product)
 
 </script>
