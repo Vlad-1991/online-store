@@ -14,7 +14,7 @@ import router from "@/router";
 const emit = defineEmits(['close'])
 const props = defineProps<{title: string}>()
 
-let returnToCatalog = () => {
+let returnToCatalog = (): void => {
   emit('close')
   router.push('/catalog')
 }

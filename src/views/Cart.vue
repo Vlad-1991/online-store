@@ -1,7 +1,9 @@
 <template lang="pug">
-  CategorySide.category-side(:categories="UiStore.getAllCategories" :checkboxBestSeller="UiStore.getCheckboxBestSeller").mt20
+  ToggleSidebar(@toggleSideBar="UiStore.toggleSidebar()")
+  CategorySide.category-side(:categories="UiStore.getAllCategories" :checkboxBestSeller="UiStore.getCheckboxBestSeller"
+    :style="{left: UiStore.sidebar}").mt20
   div.main-side
-    h1 Cart
+    h1.ml20 Cart
     h3(v-if="CartStore.getCartCount === 0") Cart is empty, please add some products first
     div(v-else)
       ul.list
@@ -24,13 +26,15 @@
 import {useUiStore} from "@/stores/UiStore";
 import {useCartStore} from "@/stores/CartStore";
 import CategorySide from "@/components/ui/CategorySide.vue";
+import ToggleSidebar from "@/components/ui/ToggleSidebar.vue";
+import {productInCartType} from "@/utils/requestTypes";
 const CartStore = useCartStore()
 const UiStore = useUiStore()
-let products: {} | null = CartStore.getCartProducts
+let products: productInCartType | null = CartStore.getCartProducts
 
 
 
-function onInput (payload: {e: string, id: string}) {
+function onInput (payload: {e: string, id: string}): void {
   let cnt
   let e = payload.e
   e = e.replace(/[^+\d]/g, '');

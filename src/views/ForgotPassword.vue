@@ -1,5 +1,5 @@
 <template lang="pug">
-  form(class="card" @submit.prevent="SignIn")
+  form(class="card" @submit.prevent)
     h1 Please enter email
     div.mb10 We will send your password to your email
 
@@ -14,13 +14,14 @@
 </template>
 
 <script setup lang="ts">
-import {computed, ref} from "vue";
+import {computed, Ref, ref} from "vue";
 import router from "@/router";
 import {useUiStore} from "@/stores/UiStore";
 import AppModal from "@/components/ui/AppModal.vue";
+import {arrInfoType} from "@/utils/requestTypes";
 const UiStore = useUiStore()
 
-const auth = ref([
+const auth: Ref<arrInfoType[]> = ref([
   {
     label: 'Email',
     val: '',
@@ -34,7 +35,7 @@ const auth = ref([
 
 const modal = ref(false)
 
-const validateField = (infoArr: [], index: number): void =>  {
+const validateField = (infoArr: arrInfoType[], index: number): void =>  {
 
   if (infoArr[index].val !== '') {
     infoArr[index].activated = true
@@ -65,7 +66,7 @@ let validatedAuth = computed((): boolean => {
   return validCount === auth.value.length;
 })
 
-const SendEmail = () => {
+const SendEmail = (): void => {
   let authData = {
     email: auth.value[0].val
   }

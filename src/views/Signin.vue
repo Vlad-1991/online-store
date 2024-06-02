@@ -19,12 +19,13 @@
 </template>
 
 <script setup lang="ts">
-import {computed, ref} from "vue";
+import {computed, Ref, ref} from "vue";
 import router from "@/router";
 import {useUiStore} from "@/stores/UiStore";
+import {arrInfoType} from "@/utils/requestTypes";
 const UiStore = useUiStore()
 
-const auth = ref([
+const auth: Ref<arrInfoType[]> = ref([
   {
     label: 'Email',
     val: '',
@@ -44,7 +45,7 @@ const auth = ref([
   }
 ])
 
-const validateField = (infoArr: [], index: number): void =>  {
+const validateField = (infoArr: arrInfoType[], index: number): void =>  {
 
   if (infoArr[index].val !== '') {
     infoArr[index].activated = true
@@ -75,7 +76,7 @@ let validatedAuth = computed((): boolean => {
   return validCount === auth.value.length;
 })
 
-const SignIn = () => {
+const SignIn = (): void => {
   let authData = {
     email: auth.value[0].val,
     password: auth.value[1].val

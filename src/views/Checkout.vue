@@ -1,7 +1,9 @@
 <template lang="pug">
-  CategorySide.category-side(:categories="UiStore.getAllCategories" :checkboxBestSeller="UiStore.getCheckboxBestSeller").mt20
+  ToggleSidebar(@toggleSideBar="UiStore.toggleSidebar()")
+  CategorySide.category-side(:categories="UiStore.getAllCategories" :checkboxBestSeller="UiStore.getCheckboxBestSeller"
+    :style="{left: UiStore.sidebar}").mt20
   div.main-side
-    h1 Checkout
+    h1.ml20 Checkout
     div(v-if="firstStep")
       table(class="table")
         thead
@@ -17,15 +19,15 @@
             td.td-left {{ product.name }}
             td.td-left  {{ product.qty }}
             td.td-left  $ {{ product.price }}
-            td.td-left  $ {{ (parseFloat(product.qty) * parseFloat(product.price)).toFixed(2) }}
-      h3 Summary: ${{parseFloat(CartStore.getSummary).toFixed(2)}}
-      input.package(type="checkbox" v-model="sep_package")
+            td.td-left  $ {{ (product.qty * parseFloat(product.price)).toFixed(2) }}
+      h3 Summary: ${{CartStore.getSummary.toFixed(2)}}
+      input.package.mr10(type="checkbox" v-model="sep_package")
       span.package Add separate package box for each product
       div.right
         button.btn.primary(@click="toSecondStep") Next
 
     div(v-else-if="secondStep")
-      form.form-checkout(@submit.prevent="onSubmit")
+      form.form-checkout(@submit.prevent)
 
         div(class="form-control")
           label(for="country") *{{adress[0].label}}
@@ -61,7 +63,7 @@
           button.btn.primary.right(@click="toThirdStep" :disabled="!validatedSecondStep") Next
 
     div(v-else-if="thirdStep")
-      form.form-checkout(@submit.prevent="onSubmit")
+      form.form-checkout(@submit.prevent)
 
         fieldset
           legend Select payment method:
@@ -87,11 +89,13 @@
 
 <script setup lang="ts">
 import {useCartStore} from "@/stores/CartStore";
-import {computed, reactive, ref, watch} from "vue";
+import {computed, reactive, Ref, ref, watch} from "vue";
 import AppModal from "@/components/ui/AppModal.vue";
 import CategorySide from "@/components/ui/CategorySide.vue";
 const CartStore = useCartStore()
 import {useUiStore} from "@/stores/UiStore";
+import ToggleSidebar from "@/components/ui/ToggleSidebar.vue";
+import {arrInfoType, productInCartType} from "@/utils/requestTypes";
 
 const UiStore = useUiStore()
 let firstStep = ref(true)
@@ -100,13 +104,14 @@ let thirdStep = ref(false)
 
 let sep_package = ref(false)
 let products = CartStore.getCartProducts
+
 if(products){
   products = Object.keys(products).map((id: string) => ({...products[id]}))
 }
 
 const modal = ref(false)
 
-const adress = ref([
+const adress: Ref<arrInfoType[]> = ref([
     {
       label: 'Country',
       val : '',
@@ -143,7 +148,7 @@ const adress = ref([
       valid: false,
     }])
 
-const payment = ref([
+const payment: Ref<arrInfoType[]> = ref([
   {
     label: 'Select payment method',
     val: '',
@@ -176,11 +181,11 @@ let validatedThirdStep = computed((): boolean => {
   return validCount === payment.value.length;
 })
 
-const validateChecked = (infoArr: [], index: number): void => {
+const validateChecked = (infoArr: arrInfoType[], index: number): void => {
   infoArr[index].valid = infoArr[index].val !== '';
 }
 
-function validateField(infoArr: [], index: number): void {
+function validateField(infoArr: arrInfoType[], index: number): void {
 
   if (infoArr[index].val !== '') {
     infoArr[index].activated = true
@@ -201,18 +206,18 @@ function validateField(infoArr: [], index: number): void {
 }
 
 
-function toSecondStep() {
+function toSecondStep(): void {
   thirdStep.value = false
   firstStep.value = false
   secondStep.value = true
 }
 
-function toThirdStep() {
+function toThirdStep(): void {
   thirdStep.value = true
   secondStep.value = false
 }
 
-function toFirstStep() {
+function toFirstStep(): void {
   firstStep.value = true
   secondStep.value = false
 }
@@ -231,7 +236,7 @@ const resetForm = (): void => {
   sep_package.value = false
 }
 
-const createOrder = async () => {
+const createOrder = async (): Promise<void> => {
   let order: {[key: string]: (string | boolean | {})} = {}
   order["country"] = adress.value[0].val
   order["adress"] = adress.value[1].val
@@ -242,11 +247,11 @@ const createOrder = async () => {
   order["comment"] = payment.value[1].val
   order["separatePackage"] = sep_package.value
   order["products"] = {
-    total: parseFloat(CartStore.getSummary).toFixed(2),
+    total: CartStore.getSummary.toFixed(2),
     products: products
   }
 
-  console.log(order)
+  // console.log(order)
 
   resetForm()
   localStorage.removeItem("cart")

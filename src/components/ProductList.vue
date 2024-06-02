@@ -14,7 +14,9 @@
 
 <script setup lang="ts">
 
-const props = defineProps<{products?: any}>()
+import {productType} from "@/utils/requestTypes";
+
+const props = defineProps<{products?: productType}>()
 
 
 </script>

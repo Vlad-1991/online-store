@@ -15,19 +15,21 @@
 import PhotoSwipeLightbox from 'photoswipe/lightbox';
 import 'photoswipe/style.css';
 import {onMounted, onUnmounted} from "vue";
+import {imageType} from "@/utils/requestTypes";
 
 const props = defineProps<{
   galleryID: string,
-  images: []
+  images: [imageType]
 }>()
 
 const emit = defineEmits(['imgLoaded'])
 
-let lightbox
+let lightbox: (PhotoSwipeLightbox | null)
 
 const imagesData = props.images
 
-onMounted(() => {
+
+onMounted((): void => {
   if (!lightbox) {
     lightbox = new PhotoSwipeLightbox({
       gallery: '#' + props.galleryID,
@@ -38,8 +40,9 @@ onMounted(() => {
   }
 })
 
-onUnmounted(() => {
+onUnmounted((): void => {
     if (lightbox) {
+      console.log(lightbox)
       lightbox.destroy();
       lightbox = null;
     }

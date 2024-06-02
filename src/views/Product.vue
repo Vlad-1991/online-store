@@ -1,9 +1,11 @@
 <template lang="pug">
-  CategorySide.category-side(:categories="UiStore.getAllCategories" :checkboxBestSeller="UiStore.getCheckboxBestSeller").mt20
-  div.main-side.mt20
+  ToggleSidebar(@toggleSideBar="UiStore.toggleSidebar()")
+  CategorySide.category-side(:categories="UiStore.getAllCategories" :checkboxBestSeller="UiStore.getCheckboxBestSeller"
+    :style="{left: UiStore.sidebar}").mt20
+  div.main-side
     div(v-if="!showReviews")
       div.product(v-if="product")
-        h1 {{ product[Object.keys(product)].name }}
+        h1.ml20 {{ product[Object.keys(product)].name }}
         div.rating Rating {{product[Object.keys(product)].rating}} of {{MAX_RATING}}
           span.reviews(@click="showReviews = true") {{product[Object.keys(product)].reviews.length}} Reviews
         div.image_card
@@ -23,48 +25,12 @@
               h3.primary.inline-block(v-if="product_added") Product added to Cart
               button.btn.orange.add_to_cart.block.mt20(@click="modal = true") Buy Now
         div.description(v-html="product[Object.keys(product)].description")
-      div(v-else)
+      div.ml20(v-else)
         h1 There are no this product
-        router-link(to="/catalog") Back to Catalog
+        router-link.link(to="/catalog") Back to Catalog
     div.reviews-block(v-else)
-      div(v-if="AuthStore.isAuthentificated")
-      h1 Reviews
-      div.flex-reviews
-        div.reviews-50
-          div.card-flex.review-card(v-for="review in product[Object.keys(product)].reviews")
-            div.bold {{review.username}}
-            h5 {{review.date}}
-            div {{review.text}}
-        div.reviews-50(v-if="AuthStore.isAuthentificated")
-          div(v-if="reviewSended")
-            h3 You have already left a review or rating on this product
-          div(v-else)
-            div.mb10.rating-star Push your rating
-            span.rating-star
-              input(type="radio" id="0stars" value="0" v-model="ratingVote")
-              label(for="0stars")  0
-            span.rating-star
-              input(type="radio" id="1star" value="1" v-model="ratingVote")
-              label(for="1star")  1
-            span.rating-star
-              input(type="radio" id="0stars" value="2" v-model="ratingVote")
-              label(for="2stars")  2
-            span.rating-star
-              input(type="radio" id="1star" value="3" v-model="ratingVote")
-              label(for="3star")  3
-            span.rating-star
-              input(type="radio" id="0stars" value="4" v-model="ratingVote")
-              label(for="4stars")  4
-            span.rating-star
-              input(type="radio" id="0stars" value="5" v-model="ratingVote")
-              label(for="5stars")  5
-            div.mt10.rating-star
-              label(for="review-area") Your review for this product (Optional)
-              textarea.review-textarea.mt10(placeholder="Write review... 300 symbols max" id="review-area" v-model="reviewText" )
-            button.btn.main.mt10(:disabled="!ratingVote" @click="sendReview(product[Object.keys(product)].id, reviewText, ratingVote)") Send review
-        div(v-else)
-          span.mr10 To send rating and review please
-          button.main.btn Sign In
+      Reviews(:is-authentificated="AuthStore.isAuthentificated" :reviews="product[Object.keys(product)].reviews" :reviewSended="reviewSended"
+      @sendReview="sendReview" @backToProduct="showReviews = false")
 
   teleport(to="body")
     modal-quick-order(v-if="modal" title="Quick Order" @close="modal = false" :product="product[Object.keys(product)]" :qty="cart_qty")
@@ -81,6 +47,10 @@ import SimpleGallery from "@/components/ui/SimpleGallery.vue";
 import {useUiStore} from "@/stores/UiStore";
 import CategorySide from "@/components/ui/CategorySide.vue";
 import ModalQuickOrder from "@/components/ui/ModalQuickOrder.vue";
+import Reviews from "@/components/ui/Reviews.vue";
+import ToggleSidebar from "@/components/ui/ToggleSidebar.vue";
+import {load} from "@/services/api/requests";
+import {productInCartType, productWithId, ratingInfoType, subcategoryType} from "@/utils/requestTypes";
 const route = useRoute()
 
 const CartStore = useCartStore()
@@ -103,10 +73,16 @@ const ratingVote = ref<number>()
 const reviewText = ref<string>()
 
 let categories = [{}]
-categories = await fetch('/categories.json')
-    .then(response => response.json())
+// categories = await fetch('/categories.json')
+//     .then(response => response.json())
+try {
+  categories = await load('/categories.json')
+}catch (e: string | unknown) {
+  UiStore.setErrorMessage(e.message)
+}
 
-const sendReview = (id: string, reviewText: string, ratingVote: string) => {
+
+const sendReview = (ratingInfo: ratingInfoType): void => {
 
   let currentUserName = AuthStore.getUserName
   let currentUserId = AuthStore.getUserId
@@ -118,25 +94,25 @@ const sendReview = (id: string, reviewText: string, ratingVote: string) => {
   let formattedDate = (month < 10 ? '0' : '') + month + '-' + (day < 10 ? '0' : '') + day  + '-' + year;
 
   //let newRatingVotes = ++product[Object.keys(product)].rating_votes
-  let newRating = (product[Object.keys(product)].rating * product[Object.keys(product)].rating_votes + parseInt(ratingVote)) /
+  let newRating: number = (product[Object.keys(product)].rating * product[Object.keys(product)].rating_votes + parseInt(ratingInfo.ratingVote)) /
       (product[Object.keys(product)].rating_votes + 1)
-  newRating = newRating.toFixed(2)
+  newRating = parseFloat(newRating.toFixed(2))
 
   let updatedProduct = product
   updatedProduct[Object.keys(updatedProduct)].rating = newRating
   updatedProduct[Object.keys(updatedProduct)].rating_votes = product[Object.keys(product)].rating_votes + 1
 
   if(reviewText){
-    let reviewObj = {text: reviewText, username: currentUserName, date: formattedDate}
+    let reviewObj = {text: ratingInfo.reviewText, username: currentUserName, date: formattedDate}
     updatedProduct[Object.keys(updatedProduct)].reviews.push(reviewObj)
   }
 
 
-  // console.log(updatedProduct)
+   // console.log(updatedProduct)
 
 }
 
-function addCart (){
+function addCart (): void{
   let key = product[Object.keys(product)].id
 
   let cur_product = CartStore.getProductById(key)
@@ -147,7 +123,7 @@ function addCart (){
       cart_qty.value = 1
       setTimeout(() => {message_overload.value = false}, 3000)
   }else {
-    let payload = {}
+    let payload: productInCartType = {}
 
     payload[key] = {
       id: product[Object.keys(product)].id,
@@ -168,7 +144,7 @@ function addCart (){
   }
 }
 
-let decrease = () => {
+let decrease = (): void => {
   if(cart_qty.value <= 1){
     cart_qty.value = 1
   }else{
@@ -176,7 +152,7 @@ let decrease = () => {
   }
 }
 
-function onInput (e: string) {
+function onInput (e: string): void {
   cart_qty.value = parseInt(e.replace(/[^+\d]/g, ''));
   if(parseInt(e) < 1){
     cart_qty.value = 1
@@ -185,7 +161,7 @@ function onInput (e: string) {
   }
 }
 
-let increase = () => {
+let increase = (): void => {
   if(cart_qty.value >= 100){
     cart_qty.value = 100
   }else{
@@ -194,9 +170,11 @@ let increase = () => {
 }
 
 let product = ref()
-let products = await fetch('/catalog.json')
-      .then(response => response.json())
-      .then(data => data.filter(val => Object.keys(val)[0] === route.params.id))
+// let products = await fetch('/catalog.json')
+//       .then(response => response.json())
+//       .then(data => data.filter(val => Object.keys(val)[0] === route.params.id))
+let products = await load('/catalog.json')
+products = products.filter((val: productWithId) => Object.keys(val)[0] === route.params.id)
 
 product = products[0]
 
@@ -206,39 +184,44 @@ const reviewSended = ref<boolean>(false)
 
 if(AuthStore.isAuthentificated){
 
-  let reviewIndex = product[Object.keys(product)].reviews.findIndex(el => el.userId === AuthStore.getUserId)
+  if(product){
+    let reviewIndex = product[Object.keys(product)].reviews.findIndex(el => el.userId === AuthStore.getUserId)
 
-  reviewSended.value = reviewIndex !== -1;
+    reviewSended.value = reviewIndex !== -1;
+  }
 
 }
 
-let writeCategoryAndSubcategory = () => {
+let writeCategoryAndSubcategory = (): void => {
   let categoryInfo = {catUrl: '', subCatUrl: ''}
-  categoryInfo.catUrl = product[Object.keys(product)].category
-  categoryInfo.subCatUrl = product[Object.keys(product)].subcategory
 
-  let current_category
-  let current_subcategory
-  let subcategories_array = [{}]
-  categories.forEach(cat => {
-    if (Object.keys(cat)[0] === categoryInfo.catUrl) {
-      current_category = cat[Object.keys(cat)[0]].text
-      subcategories_array = cat[Object.keys(cat)[0]].subcategory
-    }
-  })
+  if(product && categories){
+    categoryInfo.catUrl = product[Object.keys(product)].category
+    categoryInfo.subCatUrl = product[Object.keys(product)].subcategory
 
-  subcategories_array.forEach(subcat => {
-    if (subcat.url === categoryInfo.subCatUrl) {
-      current_subcategory = subcat.text
-    }
-  })
+    let current_category
+    let current_subcategory
+    let subcategories_array = [{}]
+    categories.forEach(cat => {
+      if (Object.keys(cat)[0] === categoryInfo.catUrl) {
+        current_category = cat[Object.keys(cat)[0]].text
+        subcategories_array = cat[Object.keys(cat)[0]].subcategory
+      }
+    })
 
-  UiStore.writeCategoryInfo({cat: current_category, subcat: current_subcategory})
+    subcategories_array.forEach((subcat: subcategoryType): void => {
+      console.log(subcat)
+      if (subcat.url === categoryInfo.subCatUrl) {
+        current_subcategory = subcat.text
+      }
+    })
+    UiStore.writeCategoryInfo({cat: current_category, subcat: current_subcategory})
+  }
 }
 
 writeCategoryAndSubcategory()
 
-const toChangeLoader = () => {
+const toChangeLoader = () : void => {
   loading.value = false
 }
 //console.log(product)

@@ -4,34 +4,35 @@
 
     div(:class="['form-control', 'mb10', {invalid: auth[0].error}]")
       label(for="email") {{auth[0].label}}
-      input(type="email" id="email" v-model.trim="auth[0].val" @input="validateField(auth, 0)")
+      input(type="email" id="email" v-model.trim="auth[0].val" @input="validateField(auth, 0)" maxlength="40")
       small(v-if="auth[0].error") {{auth[0].error}}
 
     div(:class="['form-control', 'mb10', {invalid: auth[1].error}]")
       label(for="fullname") {{auth[1].label}}
-      input(type="text" id="fullname" v-model.trim="auth[1].val" @input="validateField(auth, 1)")
+      input(type="text" id="fullname" v-model.trim="auth[1].val" @input="validateField(auth, 1)" maxlength="40")
       small(v-if="auth[1].error") {{auth[1].error}}
 
     div(:class="['form-control', 'mb10', {invalid: auth[2].error}]")
       label(for="password") {{auth[2].label}}
-      input(type="password" id="password" v-model.trim="auth[2].val" @input="validateField(auth, 2)")
+      input(type="password" id="password" v-model.trim="auth[2].val" @input="validateField(auth, 2)" maxlength="10")
       small(v-if="auth[2].error") {{auth[2].error}}
 
     div(:class="['form-control', 'mb10', {invalid: auth[3].error}]")
       label(for="passwordRepeat") {{auth[3].label}}
-      input(type="password" id="passwordRepeat" v-model.trim="auth[3].val" @input="validateMatchingPassword(auth, 3)")
+      input(type="password" id="passwordRepeat" v-model.trim="auth[3].val" @input="validateMatchingPassword()" maxlength="10")
       small(v-if="auth[3].error") {{auth[3].error}}
 
     button(class="btn main mt10" type="sumbit" :disabled="!validatedAuth" @click="SignUp") Sign Up
 </template>
 
 <script setup lang="ts">
-import {computed, ref} from "vue";
+import {computed, Ref, ref} from "vue";
 import router from "@/router";
 import {useUiStore} from "@/stores/UiStore";
+import {arrInfoType} from "@/utils/requestTypes";
 const UiStore = useUiStore()
 
-const auth = ref([
+const auth: Ref<arrInfoType[]> = ref([
   {
     label: 'Please Enter Your Email',
     val: '',
@@ -61,14 +62,14 @@ const auth = ref([
   {
     label: 'Please Repeat Your Password',
     val: '',
-    pattern: '',
+    pattern: /^[*.]/,
     valid: false,
     error: '',
     errorText: 'Password isn\'t matching'
   }
 ])
 
-const validateField = (infoArr: [], index: number): void =>  {
+const validateField = (infoArr: arrInfoType[], index: number): void =>  {
 
   if (infoArr[index].val !== '') {
     infoArr[index].activated = true
@@ -99,7 +100,7 @@ let validatedAuth = computed((): boolean => {
   return validCount === auth.value.length;
 })
 
-const validateMatchingPassword = () => {
+const validateMatchingPassword = (): void => {
   if(auth.value[2].val === auth.value[3].val){
     auth.value[3].error = ''
     auth.value[3].valid = true
@@ -109,7 +110,7 @@ const validateMatchingPassword = () => {
   }
 }
 
-const SignUp = () => {
+const SignUp = (): void => {
   let authData = {
     email: auth.value[0].val,
     fullname: auth.value[1].val,

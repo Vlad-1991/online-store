@@ -5,13 +5,12 @@
 
 <script setup lang="ts">
 
-import {useRoute} from "vue-router";
-import {useUiStore} from "@/stores/UiStore";
-import {computed, ref} from "vue";
+import {RouteMeta, useRoute} from "vue-router";
+import {computed} from "vue";
 
 const route = useRoute()
 
-let layout = computed(() => route.meta.layout)
+let layout = computed((): (RouteMeta | unknown) => route.meta.layout)
 
 
 

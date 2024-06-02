@@ -8,7 +8,9 @@ export const useUiStore = defineStore("UiStore", {
                 cat: '',
                 subcat: '',
                 categories: [],
-                checkboxBestSeller: false
+                checkboxBestSeller: false,
+                sidebar: '-500px',
+                errorMessage: ''
         }
 
     },
@@ -27,6 +29,12 @@ export const useUiStore = defineStore("UiStore", {
         },
         getSubcategory(): string {
             return this.subcat
+        },
+        getSideBarStatus(): string {
+            return this.sidebar
+        },
+        getErrorMessage(): string {
+            return this.errorMessage
         }
     },
     actions: {
@@ -39,6 +47,16 @@ export const useUiStore = defineStore("UiStore", {
         },
         pushCategories(categories: []): void{
             this.categories = categories
+        },
+        toggleSidebar(): void{
+            if(this.sidebar === "-500px"){
+                this.sidebar = "0";
+            }else{
+                this.sidebar = "-500px"
+            }
+        },
+        setErrorMessage(e: string): void {
+            this.errorMessage = e
         }
     }
 })

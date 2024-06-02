@@ -621,7 +621,8 @@ h3 {
 }
 
 .category-side {
-    /*border: 1px solid red;*/
+    z-index: 100;
+    border: 1px solid lightgray;
     width: calc(20% - 10px);
     position: fixed;
     min-height: 50vh;
@@ -632,13 +633,14 @@ h3 {
     padding-bottom: 20px;
     left: 0;
     top: 100px;
+    transition: left 0.5s;
 }
 
 .main-side {
-    width: 80%;
+    width: 100%;
     /*border: 1px solid red;*/
     position: relative;
-    left: 20%;
+    /*left: 20%;*/
     padding-left: 10px;
     padding-right: 10px;
     text-align: left;
@@ -707,18 +709,29 @@ h3 {
 
 .li-border {
     border-bottom: 1px solid var(--main-grey);
+
+}
+
+.li-highlight{
+    transition: .22s all;
+}
+
+.li-highlight:hover {
+    background: #eee;
 }
 
 .li-border:nth-child(1) {
     border-top: 1px solid var(--main-grey);
 }
 
+
+
 .category {
     color: var(--main-grey);
 }
 
 .active_category {
-    color: lightcoral;
+     color: lightcoral !important;
 }
 
 .card-block {
@@ -783,6 +796,10 @@ h3 {
     min-width: 100px;
 }
 
+.w100{
+    width: 100%;
+}
+
 .price {
     margin-bottom: 0;
 }
@@ -826,6 +843,18 @@ h3 {
     cursor: pointer;
 }
 
+.button-cat {
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.categories-flex {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .btn_inline_block {
     display: inline-block;
     float: right;
@@ -861,6 +890,28 @@ fieldset {
     color: blue;
     text-decoration: underline;
     cursor: pointer;
+}
+
+.reviews-back {
+    font-weight: normal;
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.link{
+    font-weight: normal;
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.link:hover{
+    color:red
+}
+
+.reviews-back:hover {
+    color: red;
 }
 
 
@@ -926,6 +977,10 @@ fieldset {
     margin-right: 20px;
 }
 
+.ml20 {
+    margin-left: 20px;
+}
+
 .rating-star{
     font-size: 1.3rem;
     margin-right: 5px;
@@ -983,6 +1038,11 @@ fieldset {
     margin-left: 20px;
 }
 
+.subcat:last-child {
+    margin-bottom: 20px;
+}
+
+
 
 .w20 {
     width: 20%;
@@ -992,3 +1052,81 @@ fieldset {
     width: 100%;
     display: block;
 }
+
+.toggle-button {
+    z-index: 500;
+    position: fixed;
+    left: 0;
+    top: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    padding: 5px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background: lightgray;
+}
+
+.bar {
+    width: 100%;
+    height: 4px; /* висота ліній */
+    background-color: black; /* колір ліній */
+    transition: 0.3s; /* ефект переходу */
+
+}
+
+.toggle-button:hover .bar {
+    background-color: #666; /* зміна кольору при наведенні */
+}
+
+.opened {
+    transition: transform 0.3s ease;
+}
+
+.closed {
+    transform: rotate(180deg) translateY(10px);
+    transition: transform 0.3s ease;
+}
+
+.red {
+    color: red;
+}
+
+/*.button-container {*/
+/*    position: relative; !* Встановлює відносне позиціонування для контейнера *!*/
+/*    width: 100%;*/
+/*    text-align: center; !* Вирівнює кнопку по центру горизонтально *!*/
+/*    margin: 50px 0; !* Відступи для демонстрації *!*/
+/*}*/
+
+
+/*.cat-button {*/
+/*    background: none;*/
+/*    border: none;*/
+/*    cursor: pointer;*/
+/*    outline: none;*/
+/*    padding: 0;*/
+/*    position: absolute; !* Абсолютне позиціонування *!*/
+/*    top: 50%; !* Вирівнювання по вертикалі *!*/
+/*    left: 50%; !* Вирівнювання по горизонталі *!*/
+/*    transform: translate(-50%, -50%); !* Центрування елемента *!*/
+/*}*/
+
+/*.arrow {*/
+/*    display: inline-block;*/
+/*    transition: transform 0.3s ease;*/
+/*}*/
+
+/*.opened {*/
+/*    transform: rotate(180deg);*/
+/*    transition: transform 0.3s ease;*/
+/*}*/
+
+/*.closed {*/
+/*    transition: transform 0.3s ease;*/
+/*}*/

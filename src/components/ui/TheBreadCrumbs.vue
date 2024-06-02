@@ -1,5 +1,5 @@
 <template lang="pug">
-  div.breadcrumbs {{breadcrumbsVal}}
+  div.breadcrumbs(v-html="breadcrumbsVal")
 </template>
 
 <script setup lang="ts">

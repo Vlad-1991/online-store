@@ -26,17 +26,19 @@
 <script setup lang="ts">
 import router from "@/router";
 import {ref} from "vue";
+import {fieldType, productType} from "@/utils/requestTypes";
 
 const orderSended = ref(false)
 
 const emit = defineEmits(['close'])
 const props = defineProps<{
   title: string,
-  product: Object,
+  product: productType,
   qty: number
 }>()
 
 const product = props.product
+
 const qty = props.qty
 
 const name = ref({
@@ -54,10 +56,10 @@ const phone = ref({
   valid: false,
   pattern: /^[0-9]{3}-{0,1}[0-9]{3}-{0,1}[0-9]{4}$/,
   error: '',
-  errorText: 'Please enter correct Name, minimum 3 symbols'
+  errorText: 'Please enter correct Phone number, format: 123-456-7890 or 1234567890'
 })
 
-const validateField = (field: Object) => {
+const validateField = (field: fieldType): void => {
   if (field.val !== '') {
     field.activated = true
     field.valid = false
@@ -76,7 +78,7 @@ const validateField = (field: Object) => {
   }
 }
 
-const sendQuickOrder = () => {
+const sendQuickOrder = (): void => {
   let order: {[key: string]: (string | boolean | {})} = {}
   order["name"] = name.value.val
   order["phone"] = phone.value.val
@@ -86,7 +88,6 @@ const sendQuickOrder = () => {
     productPrice: product.price,
     productSum: (parseFloat(product.price) * qty).toFixed(2)
   }
-  console.log(order)
   orderSended.value = true
 }
 

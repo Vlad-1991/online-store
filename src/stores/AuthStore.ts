@@ -1,18 +1,19 @@
 import {defineStore} from "pinia";
+import {authType} from "@/utils/requestTypes";
 
-let stub = () => {
+let stub = (): authType => {
     return {userName: 'Joy Carson', userId: 'joycarson@gmail.com'}
 }
 
 
 
 export const useAuthStore = defineStore("AuthStore", {
-    state: () => {
-    //     return {
-    //     userName: '',
-    //     userId: ''
-    // }
-        return stub()
+    state: (): authType => {
+        return {
+        userName: '',
+        userId: ''
+    }
+    //     return stub()
     },
     getters: {
         getUserName(): string | null | undefined {
@@ -30,6 +31,9 @@ export const useAuthStore = defineStore("AuthStore", {
         }
     },
     actions: {
-
+        logout(): void {
+            this.userName = ''
+            this.userId = ''
+        }
     }
 })

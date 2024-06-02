@@ -14,10 +14,14 @@
           router-link(to="/help") Help
         li
           router-link(to="/about") About Us
-      router-link(to="/signin")
-        button.btn.main.mr20 Sign In
-      router-link(to="/signup")
-        button.btn.white.mr20 Sign Up
+      div(v-if="!AuthStore.isAuthentificated")
+        router-link(to="/signin")
+          button.btn.main.mr20 Sign In
+        router-link(to="/signup")
+          button.btn.white.mr20 Sign Up
+      div(v-else)
+        router-link(to="/" @click="AuthStore.logout")
+          button.btn.white.mr20 Logout
       router-link(to="/cart" class="main")
         //router-link(to="/cart")
         fa(icon="shopping-cart" size="lg")
@@ -30,11 +34,12 @@
 import {useRouter} from "vue-router";
 import {useCartStore} from "@/stores/CartStore";
 import {useUiStore} from "@/stores/UiStore";
+import {useAuthStore} from "@/stores/AuthStore";
 const UiStore = useUiStore()
+const AuthStore = useAuthStore()
 const CartStore = useCartStore()
-
-
 const router = useRouter()
+
 
 
 </script>
