@@ -14,6 +14,7 @@ import router from "@/router";
 const emit = defineEmits(['close'])
 const props = defineProps<{title: string}>()
 
+/* to close modal window and redirect to Catalog route */
 let returnToCatalog = (): void => {
   emit('close')
   router.push('/catalog')

@@ -1,11 +1,11 @@
 <template lang="pug">
   ToggleSidebar(@toggleSideBar="UiStore.toggleSidebar()")
-  CategorySide.category-side(v-if="categories" :categories="categories" :checkboxBestSeller="checkboxBestSeller"
+  CategorySide.category-side(:categories="UiStore.getAllCategories" :checkboxBestSeller="checkboxBestSeller"
     @showBestSellers="changeShowBestsellers" @showCategory="showProductsInCategory" @showSubCategory="showProductsInSubCategory"
     :style="{left: UiStore.sidebar}").mt20
   div.main-side
     h1.ml20 Catalog
-    SearchProducts(@changedSearch="filterSearchedProducts")
+    SearchProducts(@changedSearch="activateSearch")
     SortingSelector(@sorting="loadProductsCatalog")
     div(v-if="loading").loader
     product-list(v-else :products="searchQueryProducts")
@@ -24,6 +24,7 @@ import SortingSelector from "@/components/ui/SortingSelector.vue";
 import SearchProducts from "@/components/ui/SearchProducts.vue";
 import ToggleSidebar from "@/components/ui/ToggleSidebar.vue";
 import {load} from "@/services/api/requests";
+import {filterSearchedProducts} from "@/utils/search";
 
 const UiStore = useUiStore()
 
@@ -42,12 +43,12 @@ const loading = ref(false)
 const searchQuery = ref()
 const searchQueryProducts = ref()
 
+  /* to load products from catalog, if query exists - filter products relative to category or subcategory, if sorting parametr exists -
+  also sort products by criteria */
   const loadProductsCatalog = async (sorting?: string): Promise<void> => {
 
     loading.value = true
 
-    // all_products.value = await fetch('/catalog.json')
-    //     .then(response => response.json())
     try {
       all_products.value = await load('/catalog.json')
 
@@ -85,43 +86,42 @@ const searchQueryProducts = ref()
             })
             loading.value = false
             searchQueryProducts.value = products.value
-            filterSearchedProducts(searchQuery.value)
+            filterSearchedProducts(searchQuery.value, searchQuery, products, searchQueryProducts)
             break
 
           case 'sortBestsellers':
             products.value.sort((a: productWithId, b: productWithId) => b[Object.keys(b)[0]].saled - a[Object.keys(a)[0]].saled)
             loading.value = false
             searchQueryProducts.value = products.value
-            filterSearchedProducts(searchQuery.value)
+            filterSearchedProducts(searchQuery.value, searchQuery, products, searchQueryProducts)
             break
 
           case 'sortPriceLowToHigh':
             products.value.sort((a: productWithId, b: productWithId) => parseFloat(a[Object.keys(a)[0]].price) - parseFloat(b[Object.keys(b)[0]].price))
             loading.value = false
             searchQueryProducts.value = products.value
-            filterSearchedProducts(searchQuery.value)
+            filterSearchedProducts(searchQuery.value, searchQuery, products, searchQueryProducts)
             break
 
           case 'sortPriceHighToLow':
             products.value.sort((a: productWithId, b: productWithId) => parseFloat(b[Object.keys(b)[0]].price) - parseFloat(a[Object.keys(a)[0]].price))
             loading.value = false
             searchQueryProducts.value = products.value
-            filterSearchedProducts(searchQuery.value)
+            filterSearchedProducts(searchQuery.value, searchQuery, products, searchQueryProducts)
             break
 
         }
       }else {
         loading.value = false
         searchQueryProducts.value = products.value
-        filterSearchedProducts(searchQuery.value)
+        filterSearchedProducts(searchQuery.value, searchQuery, products, searchQueryProducts)
       }
     }catch (e: string | unknown){
       UiStore.setErrorMessage(e.message)
     }
-
-
   }
 
+  /* when component render first - to load products according to query */
 onMounted(async (): Promise<void> => {
   loading.value = true
 
@@ -130,8 +130,7 @@ onMounted(async (): Promise<void> => {
   loading.value = false
 })
 
-
-
+/* if route changed to main Catalog (wihout query) - hide bestseller checkbox and show all products from catalog */
 watch(route, (): void => {
 if(!route.query.category){
   checkboxBestSeller.value = false
@@ -139,28 +138,13 @@ if(!route.query.category){
   }
 })
 
-// let categories = [Object]
-// categories = await fetch('/categories.json')
-//     .then(response => response.json())
-
-try {
-  categories = await load('/categories.json')
-  categories.sort((a: productWithId, b: productWithId): number => Object.keys(a)[0] > Object.keys(b)[0] ? 1 : -1)
-}catch (e: string | unknown){
-  UiStore.setErrorMessage(e.message)
-}
-
-// categories.sort((a, b) => a.category > b.category ? 1 : -1)
-
-
-
+/* change and save state of bestseller checkbox in Store */
 const changeShowBestsellers = (): void => {
   UiStore.changeShowBestsellers()
 }
 
+/* emited from Left Sidebar event to show products from selected category with bestseller checkbox criteria */
 const showProductsInCategory = (payload: catType): void => {
-
-
 
   let category_products = all_products.value.filter(val => val[Object.keys(val)[0]].category === payload.cat)
   // .then(data => all_products = data.filter(val => val[Object.keys(val)[0]].category === route.query.category))
@@ -174,10 +158,11 @@ const showProductsInCategory = (payload: catType): void => {
   }
 
   searchQueryProducts.value = products.value
-  filterSearchedProducts(searchQuery.value)
+  filterSearchedProducts(searchQuery.value, searchQuery, products, searchQueryProducts)
 
 }
 
+/* emited from Left Sidebar event to show products from selected subcategory with bestseller checkbox criteria */
 const showProductsInSubCategory = (payload: subcatType): void => {
 
   let category_products = all_products.value.filter(val => val[Object.keys(val)[0]].category === payload.cat)
@@ -195,32 +180,11 @@ const showProductsInSubCategory = (payload: subcatType): void => {
   }
 
   searchQueryProducts.value = products.value
-  filterSearchedProducts(searchQuery.value)
+  filterSearchedProducts(searchQuery.value, searchQuery, products, searchQueryProducts)
 
 }
 
-const filterSearchedProducts = (query: string): void => {
-
-  searchQuery.value = query
-  const filteredByName = ref()
-  const filteredByDescription = ref()
-
-  filteredByName.value = products.value.filter((product: productWithId): productWithId => {
-    if(searchQuery.value){
-      return ((product[Object.keys(product)].name.toLowerCase()).includes(searchQuery.value.toLowerCase()))
-    }
-    return product
-  })
-
-  filteredByDescription.value = products.value.filter((product: productWithId) => {
-    if(searchQuery.value){
-      return ((product[Object.keys(product)].description.toLowerCase()).includes(searchQuery.value.toLowerCase()))
-    }
-    return product
-  })
-
-  searchQueryProducts.value = Array.from(new Set(filteredByName.value.concat(filteredByDescription.value)))
+const activateSearch = (query: string) => {
+  filterSearchedProducts(query, searchQuery, products, searchQueryProducts)
 }
-
-
 </script>

@@ -1,3 +1,4 @@
+<!-- page of 404 error -->
 <template lang="pug">
   div.breadcrumbs
     div.center

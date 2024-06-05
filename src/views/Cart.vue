@@ -22,6 +22,7 @@
           button.btn.primary.right.btn_inline_block Checkout
 </template>
 
+<!-- component of Cart, contains table with added products, names, qty, price, delete button and summary, also has button - go to checkout -->
 <script setup lang="ts">
 import {useUiStore} from "@/stores/UiStore";
 import {useCartStore} from "@/stores/CartStore";
@@ -33,7 +34,7 @@ const UiStore = useUiStore()
 let products: productInCartType | null = CartStore.getCartProducts
 
 
-
+/* to change qty of product in Cart, have a basic qty validation, valid qty 1 - 100 */
 function onInput (payload: {e: string, id: string}): void {
   let cnt
   let e = payload.e
@@ -50,7 +51,4 @@ function onInput (payload: {e: string, id: string}): void {
   }
   CartStore.updateCount({id: payload.id, cnt: cnt})
 }
-
-
-
 </script>

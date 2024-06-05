@@ -23,23 +23,15 @@
         router-link(to="/" @click="AuthStore.logout")
           button.btn.white.mr20 Logout
       router-link(to="/cart" class="main")
-        //router-link(to="/cart")
         fa(icon="shopping-cart" size="lg")
         span(class="cart-count") {{CartStore.getCartCount}}
-
-        //a(href="#" @click.prevent="logout") Выход
 </template>
 
+<!-- this is navbar - rendered once on main layout to navigate to all routes, except checkout and specific category query
+ have also log in, sign in, log out buttons -->
 <script setup lang="ts">
-import {useRouter} from "vue-router";
 import {useCartStore} from "@/stores/CartStore";
-import {useUiStore} from "@/stores/UiStore";
 import {useAuthStore} from "@/stores/AuthStore";
-const UiStore = useUiStore()
 const AuthStore = useAuthStore()
 const CartStore = useCartStore()
-const router = useRouter()
-
-
-
 </script>

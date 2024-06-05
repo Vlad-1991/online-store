@@ -6,6 +6,7 @@
     h1.ml20 About Us
 </template>
 
+<!-- Component About Us - contains general info about Online Store (to add more details in future) -->
 <script setup>
 import {useUiStore} from "@/stores/UiStore";
 import CategorySide from "@/components/ui/CategorySide.vue";

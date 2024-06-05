@@ -4,17 +4,17 @@
 
     div(:class="['form-control', 'mb10', {invalid: auth[0].error}]")
       label(for="email") {{auth[0].label}}
-      input(type="email" id="email" v-model.trim="auth[0].val" @input="validateField(auth, 0)" maxlength="40")
+      input(type="email" id="email" v-model.trim="auth[0].val" @input="validateFieldWithIndex(auth, 0)" maxlength="40")
       small(v-if="auth[0].error") {{auth[0].error}}
 
     div(:class="['form-control', 'mb10', {invalid: auth[1].error}]")
       label(for="fullname") {{auth[1].label}}
-      input(type="text" id="fullname" v-model.trim="auth[1].val" @input="validateField(auth, 1)" maxlength="40")
+      input(type="text" id="fullname" v-model.trim="auth[1].val" @input="validateFieldWithIndex(auth, 1)" maxlength="40")
       small(v-if="auth[1].error") {{auth[1].error}}
 
     div(:class="['form-control', 'mb10', {invalid: auth[2].error}]")
       label(for="password") {{auth[2].label}}
-      input(type="password" id="password" v-model.trim="auth[2].val" @input="validateField(auth, 2)" maxlength="10")
+      input(type="password" id="password" v-model.trim="auth[2].val" @input="validateFieldWithIndex(auth, 2)" maxlength="10")
       small(v-if="auth[2].error") {{auth[2].error}}
 
     div(:class="['form-control', 'mb10', {invalid: auth[3].error}]")
@@ -31,7 +31,9 @@ import router from "@/router";
 import {useUiStore} from "@/stores/UiStore";
 import {arrInfoType} from "@/utils/requestTypes";
 const UiStore = useUiStore()
+import {validateFieldWithIndex, checkAllFields} from "@/utils/validation";
 
+/* array with all info about fields - email, name, password and repeated password with validation rules */
 const auth: Ref<arrInfoType[]> = ref([
   {
     label: 'Please Enter Your Email',
@@ -69,37 +71,10 @@ const auth: Ref<arrInfoType[]> = ref([
   }
 ])
 
-const validateField = (infoArr: arrInfoType[], index: number): void =>  {
+/* to check if all fields is valid to return true to enable Sign In button */
+let validatedAuth = computed(() => checkAllFields(auth.value))
 
-  if (infoArr[index].val !== '') {
-    infoArr[index].activated = true
-    infoArr[index].valid = false
-  }
-  if (infoArr[index].val === '' && infoArr[index].activated) {
-    infoArr[index].error = 'Field cant be empty'
-    infoArr[index].valid = false
-  }
-  if (infoArr[index].val !== '' && infoArr[index].activated && !(infoArr[index].pattern.test(infoArr[index].val))) {
-    infoArr[index].error = infoArr[index].errorText
-    infoArr[index].valid = false
-  }
-  if (infoArr[index].activated && (infoArr[index].pattern.test(infoArr[index].val))) {
-
-    infoArr[index].error = ''
-    infoArr[index].valid = true
-  }
-}
-
-let validatedAuth = computed((): boolean => {
-  let validCount: number = 0
-  auth.value.forEach((el) => {
-    if(el.valid){
-      validCount++
-    }
-  })
-  return validCount === auth.value.length;
-})
-
+/* to check if password in field 2 and password in filed 3 same - to set this field valid, in another case - show error under this field */
 const validateMatchingPassword = (): void => {
   if(auth.value[2].val === auth.value[3].val){
     auth.value[3].error = ''
@@ -110,14 +85,15 @@ const validateMatchingPassword = (): void => {
   }
 }
 
+/* to collect email, name and password to object and send to server */
 const SignUp = (): void => {
   let authData = {
     email: auth.value[0].val,
     fullname: auth.value[1].val,
     password: auth.value[2].val
   }
+  /* there will be sending data to server, if response positive - redirect to catalog page */
   console.log(authData)
   router.push('/catalog')
 }
-
 </script>

@@ -35,9 +35,6 @@
             label(for="review-area") Your review for this product (Optional)
             textarea.review-textarea.mt10(placeholder="Write review... 300 symbols max" id="review-area" v-model="reviewText" )
           button.btn.main.mt10(:disabled="!ratingVote" @click="emit('sendReview', {reviewText: reviewText, ratingVote: ratingVote})") Send review
-      //div(v-else)
-      //  span.mr10 To send rating and review please
-      //  button.main.btn Sign In
   div(v-else)
     h1 Reviews
     div.reviews-back.mb20(@click="emit('backToProduct')") Back to Product
@@ -46,6 +43,9 @@
       button.btn.main Sign In
 </template>
 
+<!-- this component is rendering all current reviews and rating of product, and also contains form of voting and review form.
+if user isnt authorized, render message, that authorization needed to send rating and review.
+if user already left review, render message "You have already left a review or rating on this product" -->
 <script setup lang="ts">
 import {ref} from "vue";
 import {reviewsType} from "@/utils/requestTypes";
@@ -56,8 +56,6 @@ const props = defineProps<{
   reviews: Array<reviewsType>,
   reviewSended: boolean,
 }>()
-
-
 
 const ratingVote = ref<number>()
 const reviewText = ref<string>()

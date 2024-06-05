@@ -5,19 +5,18 @@
       :style="{left: UiStore.sidebar}").mt20
     div.main-side
       h1.ml20 Our Bestsellers
-      SearchProducts(@changedSearch="filterSearchedProducts")
+      SearchProducts(@changedSearch="activateSearch")
       SortingSelector(@sorting="loadProductsHome")
       div(v-if="loading").loader
       product-list(v-else :products="searchQueryProducts")
 </template>
 
+
+<!-- Home component - contains bestseller list of products and Left Sidebar -->
 <script setup lang="ts">
 import CategorySide from "@/components/ui/CategorySide.vue";
-
 import ProductList from "@/components/ProductList.vue";
-
-
-import {computed, onMounted, ref} from "vue";
+import {onMounted, Ref, ref} from "vue";
 import {useUiStore} from "@/stores/UiStore";
 const UiStore = useUiStore()
 import {BESTSELLER_COUNT} from "@/main";
@@ -26,27 +25,21 @@ import SearchProducts from "@/components/ui/SearchProducts.vue";
 import ToggleSidebar from "@/components/ui/ToggleSidebar.vue";
 import {load} from "@/services/api/requests";
 import {productWithId} from "@/utils/requestTypes";
+import {filterSearchedProducts} from "@/utils/search";
 
-const products = ref()
-
+const products: Ref<productWithId[]> = ref([]);
 const loading = ref(false)
-
 const searchQuery = ref()
+const searchQueryProducts: Ref<productWithId[]> = ref([]);
 
-const searchQueryProducts = ref()
-
-// console.log(searchQueryProducts)
-
+/* to load bestseller products from catalog, also sort products by criteria */
 const loadProductsHome = async (sorting?: string): Promise<void> => {
 
   loading.value = true
 
-  // products.value = await fetch('/catalog.json')
-  //     .then(response => response.json()).then(data => data.filter(val => val[Object.keys(val)[0]].saled >= BESTSELLER_COUNT))
-
   try {
     products.value = await load('/catalog.json')
-    products.value = products.value.filter(val => val[Object.keys(val)[0]].saled >= BESTSELLER_COUNT)
+    products.value = products.value.filter((val: productWithId) => val[Object.keys(val)[0]].saled >= BESTSELLER_COUNT)
 
     if (sorting) {
       switch (sorting) {
@@ -55,67 +48,46 @@ const loadProductsHome = async (sorting?: string): Promise<void> => {
           products.value.sort((a: productWithId, b: productWithId) => a[Object.keys(a)[0]].name.localeCompare(b[Object.keys(b)[0]].name));
           loading.value = false
           searchQueryProducts.value = products.value
-          filterSearchedProducts(searchQuery.value)
+          filterSearchedProducts(searchQuery.value, searchQuery, products, searchQueryProducts)
           break
 
         case 'sortBestsellers':
           products.value.sort((a: productWithId, b: productWithId) => b[Object.keys(b)[0]].saled - a[Object.keys(a)[0]].saled);
           loading.value = false
           searchQueryProducts.value = products.value
-          filterSearchedProducts(searchQuery.value)
+          filterSearchedProducts(searchQuery.value, searchQuery, products, searchQueryProducts)
           break
 
         case 'sortPriceLowToHigh':
           products.value.sort((a: productWithId, b: productWithId) => parseFloat(a[Object.keys(a)[0]].price) - parseFloat(b[Object.keys(b)[0]].price));
           loading.value = false
           searchQueryProducts.value = products.value
-          filterSearchedProducts(searchQuery.value)
+          filterSearchedProducts(searchQuery.value, searchQuery, products, searchQueryProducts)
           break
 
         case 'sortPriceHighToLow':
           products.value.sort((a: productWithId, b: productWithId) => parseFloat(b[Object.keys(b)[0]].price) - parseFloat(a[Object.keys(a)[0]].price));
           loading.value = false
           searchQueryProducts.value = products.value
-          filterSearchedProducts(searchQuery.value)
+          filterSearchedProducts(searchQuery.value, searchQuery, products, searchQueryProducts)
           break
 
       }
     }else{
       loading.value = false
       searchQueryProducts.value = products.value
-      filterSearchedProducts(searchQuery.value)
+      filterSearchedProducts(searchQuery.value, searchQuery, products, searchQueryProducts)
     }
   }catch (e: string | unknown) {
     UiStore.setErrorMessage(e.message)
   }
-
-
 }
 
-const filterSearchedProducts = (query: string): void => {
-
-  searchQuery.value = query
-
-  const filteredByName = ref()
-  const filteredByDescription = ref()
-
-  filteredByName.value = products.value.filter((product: productWithId): productWithId => {
-    if(searchQuery.value){
-      return ((product[Object.keys(product)].name.toLowerCase()).includes(searchQuery.value.toLowerCase()))
-    }
-    return product
-  })
-
-  filteredByDescription.value = products.value.filter((product: productWithId): productWithId => {
-    if(searchQuery.value){
-      return ((product[Object.keys(product)].description.toLowerCase()).includes(searchQuery.value.toLowerCase()))
-    }
-    return product
-  })
-
-  searchQueryProducts.value = Array.from(new Set(filteredByName.value.concat(filteredByDescription.value)))
+const activateSearch = (query: string) => {
+  filterSearchedProducts(query, searchQuery, products, searchQueryProducts)
 }
 
+/* before page loaded - load products from server */
 onMounted(async (): Promise<void> => {
   loading.value = true
 

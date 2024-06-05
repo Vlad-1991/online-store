@@ -11,6 +11,8 @@
       img(:src="imagesData[0].largeURL" alt="" v-if="key === 0" @load="$emit('imgLoaded')")
 </template>
 
+<!-- this component render beautiful gallery with one or many product images
+ with UI to show next or previous image, to close image by mouse click or press escape -->
 <script setup lang="ts">
 import PhotoSwipeLightbox from 'photoswipe/lightbox';
 import 'photoswipe/style.css';
@@ -42,7 +44,6 @@ onMounted((): void => {
 
 onUnmounted((): void => {
     if (lightbox) {
-      console.log(lightbox)
       lightbox.destroy();
       lightbox = null;
     }

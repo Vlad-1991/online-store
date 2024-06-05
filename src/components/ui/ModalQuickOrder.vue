@@ -24,9 +24,9 @@
 </template>
 
 <script setup lang="ts">
-import router from "@/router";
 import {ref} from "vue";
-import {fieldType, productType} from "@/utils/requestTypes";
+import {productType} from "@/utils/requestTypes";
+import {validateField} from "@/utils/validation"
 
 const orderSended = ref(false)
 
@@ -41,6 +41,7 @@ const product = props.product
 
 const qty = props.qty
 
+/* initialization of name input field, by default it is empty and not activated. Pattern - any letters and space, from 3 to 50 symbols */
 const name = ref({
   val: '',
   activated: false,
@@ -50,6 +51,7 @@ const name = ref({
   errorText: 'Please enter correct Name, minimum 3 symbols'
 })
 
+/* initialization of phone input field, by default it is empty and not activated. Pattern - 123-123-0234 or 1231230234 format will be valid */
 const phone = ref({
   val: '',
   activated: false,
@@ -59,25 +61,8 @@ const phone = ref({
   errorText: 'Please enter correct Phone number, format: 123-456-7890 or 1234567890'
 })
 
-const validateField = (field: fieldType): void => {
-  if (field.val !== '') {
-    field.activated = true
-    field.valid = false
-  }
-  if (field.val === '' && field.activated) {
-    field.error = 'Field cant be empty'
-    field.valid = false
-  }
-  if (field.val !== '' && field.activated && !(field.pattern.test(field.val))) {
-    field.error = field.errorText
-    field.valid = false
-  }
-  if (field.activated && (field.pattern.test(field.val))) {
-    field.error = ''
-    field.valid = true
-  }
-}
-
+/* to put all fields and current product object to one object and can be sended to server,
+ orderSended - ref, if true - will be called another window, that confirmed successfull quick order */
 const sendQuickOrder = (): void => {
   let order: {[key: string]: (string | boolean | {})} = {}
   order["name"] = name.value.val

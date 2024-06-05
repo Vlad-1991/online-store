@@ -7,11 +7,7 @@
 
 import {RouteMeta, useRoute} from "vue-router";
 import {computed} from "vue";
-
 const route = useRoute()
 
 let layout = computed((): (RouteMeta | unknown) => route.meta.layout)
-
-
-
 </script>

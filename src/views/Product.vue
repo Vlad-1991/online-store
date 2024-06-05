@@ -19,7 +19,7 @@
               input.btn_cart_input(type="number" min="1" max="100" step="1" pattern="[0-9]{3}" v-model="cart_qty" @input="onInput($event.target.value)")
               button.btn_cart(@click="increase") +
             span
-              button.btn.danger.add_to_cart(@click="addCart()") Add to Cart
+              button.btn.danger.add_to_cart(@click="initAddCart") Add to Cart
               h3.inline-block.price_sum(v-if="cart_qty > 1") Summary: ${{(cart_qty * parseFloat(product[Object.keys(product)].price)).toFixed(2)}}
               h3.inline-block(v-if="message_overload") Max count of this position is 100
               h3.primary.inline-block(v-if="product_added") Product added to Cart
@@ -39,9 +39,8 @@
 </template>
 
 <script setup lang="ts">
-import {useCartStore} from "@/stores/CartStore";
 import {useAuthStore} from "@/stores/AuthStore";
-import {onMounted, reactive, ref} from "vue";
+import {ref} from "vue";
 import {useRoute} from "vue-router";
 import SimpleGallery from "@/components/ui/SimpleGallery.vue";
 import {useUiStore} from "@/stores/UiStore";
@@ -50,38 +49,55 @@ import ModalQuickOrder from "@/components/ui/ModalQuickOrder.vue";
 import Reviews from "@/components/ui/Reviews.vue";
 import ToggleSidebar from "@/components/ui/ToggleSidebar.vue";
 import {load} from "@/services/api/requests";
-import {productInCartType, productWithId, ratingInfoType, subcategoryType} from "@/utils/requestTypes";
+import {productWithId, ratingInfoType, subcategoryType} from "@/utils/requestTypes";
+import {addCart} from "@/utils/product";
 const route = useRoute()
 
-const CartStore = useCartStore()
 const AuthStore = useAuthStore()
 const UiStore = useUiStore()
 const loading = ref(true)
 const modal = ref(false)
 
 const cart_qty = ref<number>(1)
-
-//const local_storage = localStorage.getItem("cart")
-
-//const result = JSON.parse(local_storage)
 const product_added = ref<boolean>(false)
 const message_overload = ref<boolean>(false)
 const MAX_RATING = 5
 
 const showReviews = ref<boolean>(false)
-const ratingVote = ref<number>()
 const reviewText = ref<string>()
 
 let categories = [{}]
-// categories = await fetch('/categories.json')
-//     .then(response => response.json())
 try {
   categories = await load('/categories.json')
 }catch (e: string | unknown) {
   UiStore.setErrorMessage(e.message)
 }
 
+const initAddCart = () => {
+  addCart(product, message_overload, cart_qty, product_added)
+}
 
+let product = ref()
+try {
+  let products = await load('/catalog.json')
+  products = products.filter((val: productWithId) => Object.keys(val)[0] === route.params.id)
+  product = products[0]
+}catch (e: string | unknown){
+  UiStore.setErrorMessage(e.message)
+}
+
+const reviewSended = ref<boolean>(false)
+
+if(AuthStore.isAuthentificated){
+
+  if(product){
+    let reviewIndex = product[Object.keys(product)].reviews.findIndex(el => el.userId === AuthStore.getUserId)
+
+    reviewSended.value = reviewIndex !== -1;
+  }
+}
+
+/* to collect user rating, add current date and time, optional review text and send this info to server */
 const sendReview = (ratingInfo: ratingInfoType): void => {
 
   let currentUserName = AuthStore.getUserName
@@ -93,7 +109,6 @@ const sendReview = (ratingInfo: ratingInfoType): void => {
   let year = currentDate.getFullYear();
   let formattedDate = (month < 10 ? '0' : '') + month + '-' + (day < 10 ? '0' : '') + day  + '-' + year;
 
-  //let newRatingVotes = ++product[Object.keys(product)].rating_votes
   let newRating: number = (product[Object.keys(product)].rating * product[Object.keys(product)].rating_votes + parseInt(ratingInfo.ratingVote)) /
       (product[Object.keys(product)].rating_votes + 1)
   newRating = parseFloat(newRating.toFixed(2))
@@ -106,45 +121,11 @@ const sendReview = (ratingInfo: ratingInfoType): void => {
     let reviewObj = {text: ratingInfo.reviewText, username: currentUserName, date: formattedDate}
     updatedProduct[Object.keys(updatedProduct)].reviews.push(reviewObj)
   }
-
-
-   // console.log(updatedProduct)
-
+  /* there will be sending updated product to server (with new user review) */
 }
 
-function addCart (): void{
-  let key = product[Object.keys(product)].id
-
-  let cur_product = CartStore.getProductById(key)
-
-  if(cur_product && (cur_product.qty >= 100)){
-
-      message_overload.value = true
-      cart_qty.value = 1
-      setTimeout(() => {message_overload.value = false}, 3000)
-  }else {
-    let payload: productInCartType = {}
-
-    payload[key] = {
-      id: product[Object.keys(product)].id,
-      qty: cart_qty.value,
-      name: product[Object.keys(product)].name,
-      price: product[Object.keys(product)].price
-    }
-
-    CartStore.addToCart(payload)
-    cart_qty.value = 1
-    product_added.value = true
-    setTimeout(() => {
-      product_added.value = false
-    }, 3000)
-
-    // console.log('product added')
-
-  }
-}
-
-let decrease = (): void => {
+/* to decrase qty according to pushing "-" button by user*/
+const decrease = (): void => {
   if(cart_qty.value <= 1){
     cart_qty.value = 1
   }else{
@@ -152,6 +133,7 @@ let decrease = (): void => {
   }
 }
 
+/* to delete any symbols except numbers and save it to ref */
 function onInput (e: string): void {
   cart_qty.value = parseInt(e.replace(/[^+\d]/g, ''));
   if(parseInt(e) < 1){
@@ -161,7 +143,8 @@ function onInput (e: string): void {
   }
 }
 
-let increase = (): void => {
+/* to increase qty according to pushing "+" button by user*/
+const increase = (): void => {
   if(cart_qty.value >= 100){
     cart_qty.value = 100
   }else{
@@ -169,30 +152,8 @@ let increase = (): void => {
   }
 }
 
-let product = ref()
-// let products = await fetch('/catalog.json')
-//       .then(response => response.json())
-//       .then(data => data.filter(val => Object.keys(val)[0] === route.params.id))
-let products = await load('/catalog.json')
-products = products.filter((val: productWithId) => Object.keys(val)[0] === route.params.id)
-
-product = products[0]
-
-// console.log(product[Object.keys(product)])
-
-const reviewSended = ref<boolean>(false)
-
-if(AuthStore.isAuthentificated){
-
-  if(product){
-    let reviewIndex = product[Object.keys(product)].reviews.findIndex(el => el.userId === AuthStore.getUserId)
-
-    reviewSended.value = reviewIndex !== -1;
-  }
-
-}
-
-let writeCategoryAndSubcategory = (): void => {
+/* to find current product category name and subcategory name and put them to UI Store to reuse in breadcrumbs */
+const writeCategoryAndSubcategory = (): void => {
   let categoryInfo = {catUrl: '', subCatUrl: ''}
 
   if(product && categories){
@@ -221,6 +182,7 @@ let writeCategoryAndSubcategory = (): void => {
 
 writeCategoryAndSubcategory()
 
+/* when image loaded - remove loader from product page */
 const toChangeLoader = () : void => {
   loading.value = false
 }

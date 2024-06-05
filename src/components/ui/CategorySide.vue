@@ -7,9 +7,6 @@
           router-link.category.inline-block.w100.li-highlight(:to="`/catalog?category=${Object.keys(category)[0]}`"
             :class="$route.query.category === Object.keys(category)[0] ? 'active_category' : ''"
             @click="$emit('showCategory', {cat: Object.keys(category)[0]})") {{category[Object.keys(category)[0]].text}}
-          //div.button-container
-          //  button.cat-button(:class="switched ? 'opened' : 'closed'" @click="switchCatButton")
-          //    span.arrow &#9660;
           span.button-cat(:class="switched[index] ? 'opened' : 'closed'" @click="switchCatButton(index)") ^
 
         li.subcat.li-highlight(v-if="switched[index]" v-for="subcat in category[Object.keys(category)[0]].subcategory" :key="subcat.url")
@@ -33,10 +30,9 @@ const props = defineProps<{
   checkboxBestSeller: boolean
 }>()
 
-// console.log(props.categories)
-
 const emit = defineEmits(['showBestSellers', 'showCategory', 'showSubCategory'])
 
+/* toggle show or not show bestseller products, and init event to show products in current category or subcategory */
 const toShowBestSellers = (): void => {
   emit('showBestSellers')
   if(route.query.subcategory){
@@ -45,19 +41,15 @@ const toShowBestSellers = (): void => {
     emit('showCategory', {cat: route.query.category})
   }
 }
+
+/* initialization array with status of showing subcategory lists, not shown by default */
 const switched: Ref<boolean[]> = ref([])
 for(let i = 0; i < props.categories.length; i++){
   switched.value[i] = false
 }
 
-// console.log(switched.value)
-
+/* toggle show or no show pressed subcategory list */
 const switchCatButton = (index: number): void => {
   switched.value[index] = !switched.value[index]
-  // switched.value = !switched.value
 }
-
-
-
-//const showBestseller = ref<boolean>(false) // value of checkbox bestseller
 </script>

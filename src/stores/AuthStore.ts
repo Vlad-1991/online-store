@@ -1,6 +1,7 @@
 import {defineStore} from "pinia";
 import {authType} from "@/utils/requestTypes";
 
+/* stub to simulate, that user authorized */
 let stub = (): authType => {
     return {userName: 'Joy Carson', userId: 'joycarson@gmail.com'}
 }
@@ -8,6 +9,7 @@ let stub = (): authType => {
 
 
 export const useAuthStore = defineStore("AuthStore", {
+    /* by default user isnt authorized */
     state: (): authType => {
         return {
         userName: '',

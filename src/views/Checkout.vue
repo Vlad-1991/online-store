@@ -38,18 +38,18 @@
 
         div(class="form-control" :class="{invalid: adress[1].error}")
           label(for="adress")  *{{adress[1].label}}
-          input(type="text" id="adress" placeholder="Boulevard str 8, fl. 321" v-model.trim="adress[1].val" @input="validateField(adress, 1)")
+          input(type="text" id="adress" placeholder="Boulevard str 8, fl. 321" v-model.trim="adress[1].val" @input="validateFieldWithIndex(adress, 1)")
           small(v-if="adress[1].error")  {{adress[1].error}}
 
         div(class="form-control" :class="{invalid: adress[2].error}")
           label(for="zip") *ZIP Code
-          input(type="text" placeholder="90123" id="zip" pattern="[0-9]{5}" v-model.trim="adress[2].val" @input="validateField(adress, 2)")
+          input(type="text" placeholder="90123" id="zip" pattern="[0-9]{5}" v-model.trim="adress[2].val" @input="validateFieldWithIndex(adress, 2)")
           small(v-if="adress[2].error")  {{adress[2].error}}
 
         div(class="form-control" :class="{invalid: adress[3].error}")
           label(for="phone")  *Phone
           input(type="tel"
-            placeholder="123-456-7890" id="phone" v-model.trim="adress[3].val" @input="validateField(adress, 3)")
+            placeholder="123-456-7890" id="phone" v-model.trim="adress[3].val" @input="validateFieldWithIndex(adress, 3)")
           small(v-if="adress[3].error")  {{adress[3].error}}
 
         div(class="form-control")
@@ -87,6 +87,8 @@
 
 </template>
 
+<!-- this component contains with table of ordered products, form to collect information of customer by 3 steps
+all fields has basic validation -->
 <script setup lang="ts">
 import {useCartStore} from "@/stores/CartStore";
 import {computed, reactive, Ref, ref, watch} from "vue";
@@ -96,6 +98,7 @@ const CartStore = useCartStore()
 import {useUiStore} from "@/stores/UiStore";
 import ToggleSidebar from "@/components/ui/ToggleSidebar.vue";
 import {arrInfoType, productInCartType} from "@/utils/requestTypes";
+import {validateChecked, validateFieldWithIndex} from "@/utils/validation";
 
 const UiStore = useUiStore()
 let firstStep = ref(true)
@@ -111,6 +114,7 @@ if(products){
 
 const modal = ref(false)
 
+/* all adress fields with rules of validation */
 const adress: Ref<arrInfoType[]> = ref([
     {
       label: 'Country',
@@ -160,7 +164,7 @@ const payment: Ref<arrInfoType[]> = ref([
     valid: true
   }
 ])
-
+/* to validate form - collect all fields from form and count - if all valid - customer have access to click to next step */
 let validatedSecondStep = computed((): boolean => {
   let validCount: number = 0
   adress.value.forEach((el) => {
@@ -171,6 +175,7 @@ let validatedSecondStep = computed((): boolean => {
   return validCount === adress.value.length;
 })
 
+/* to validate last step, if all fields valid - customer have access to confirm order (send to server) */
 let validatedThirdStep = computed((): boolean => {
   let validCount: number = 0
   payment.value.forEach((el) => {
@@ -181,47 +186,26 @@ let validatedThirdStep = computed((): boolean => {
   return validCount === payment.value.length;
 })
 
-const validateChecked = (infoArr: arrInfoType[], index: number): void => {
-  infoArr[index].valid = infoArr[index].val !== '';
-}
-
-function validateField(infoArr: arrInfoType[], index: number): void {
-
-  if (infoArr[index].val !== '') {
-    infoArr[index].activated = true
-    infoArr[index].valid = false
-  }
-  if (infoArr[index].val === '' && infoArr[index].activated) {
-    infoArr[index].error = 'Field cant be empty'
-    infoArr[index].valid = false
-  }
-  if (infoArr[index].val !== '' && infoArr[index].activated && !(infoArr[index].pattern.test(infoArr[index].val))) {
-    infoArr[index].error = infoArr[index].errorText
-    infoArr[index].valid = false
-  }
-  if (infoArr[index].activated && (infoArr[index].pattern.test(infoArr[index].val))) {
-    infoArr[index].error = ''
-    infoArr[index].valid = true
-  }
-}
-
-
+/* to select second step window, when user click button from first step */
 function toSecondStep(): void {
   thirdStep.value = false
   firstStep.value = false
   secondStep.value = true
 }
 
+/* to select third step window, when user click button from second step */
 function toThirdStep(): void {
   thirdStep.value = true
   secondStep.value = false
 }
 
+/* to select first step window, when user click back button from second step */
 function toFirstStep(): void {
   firstStep.value = true
   secondStep.value = false
 }
 
+/* to empty form after order confirmed */
 const resetForm = (): void => {
   adress.value.forEach(el => {
     el.val = ''
@@ -236,6 +220,8 @@ const resetForm = (): void => {
   sep_package.value = false
 }
 
+/* to collect all info from ordered products and filled input fields to object to send to server (must be added later with backend)
+after it created modal window about order info */
 const createOrder = async (): Promise<void> => {
   let order: {[key: string]: (string | boolean | {})} = {}
   order["country"] = adress.value[0].val
@@ -250,21 +236,13 @@ const createOrder = async (): Promise<void> => {
     total: CartStore.getSummary.toFixed(2),
     products: products
   }
-
-  // console.log(order)
+/* there must be sending order to server*/
+  console.log(order)
 
   resetForm()
   localStorage.removeItem("cart")
   CartStore.clearCart()
   modal.value = true
-
-  // let orderList = await fetch('/categories.json')
-  //     .then(response => response.json())
-  //
-  // orderList.push(order)
-  // orderList = JSON.stringify(orderList)
-
-
 }
 
 

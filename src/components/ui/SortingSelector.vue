@@ -9,6 +9,8 @@
       option(value="sortPriceHighToLow") Price: High to Low
 </template>
 
+<!-- this component render selector to sort product by criterias: alphavite, bestseller rating, price from low to high and price from high to low,
+emit event with sorting value -->
 <script setup lang="ts">
 const emit = defineEmits(['sorting'])
 </script>

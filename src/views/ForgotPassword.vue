@@ -4,21 +4,23 @@
     div.mb10 We will send your password to your email
 
     div(:class="['form-control', 'mb10', {invalid: auth[0].error}]")
-      input(type="email" id="email" v-model.trim="auth[0].val" @input="validateField(auth, 0)")
+      input(type="email" id="email" v-model.trim="auth[0].val" @input="validateFieldWithIndex(auth, 0)")
       small(v-if="auth[0].error") {{auth[0].error}}
 
-    button(class="btn main mt10" type="sumbit" :disabled="!validatedAuth" @click="SendEmail") Send Email
+    button(class="btn main mt10" type="sumbit" :disabled="!auth[0].valid" @click="SendEmail") Send Email
 
     teleport(to="body")
       app-modal(v-if="modal" title="Your password was sent" @close="modal = false") Please check your inbox on email
 </template>
 
+<!-- component renders form to collect email and send request to server (must be realized with back-end) -->
 <script setup lang="ts">
-import {computed, Ref, ref} from "vue";
-import router from "@/router";
+import {Ref, ref} from "vue";
 import {useUiStore} from "@/stores/UiStore";
 import AppModal from "@/components/ui/AppModal.vue";
 import {arrInfoType} from "@/utils/requestTypes";
+import {validateFieldWithIndex} from "@/utils/validation";
+
 const UiStore = useUiStore()
 
 const auth: Ref<arrInfoType[]> = ref([
@@ -35,45 +37,16 @@ const auth: Ref<arrInfoType[]> = ref([
 
 const modal = ref(false)
 
-const validateField = (infoArr: arrInfoType[], index: number): void =>  {
-
-  if (infoArr[index].val !== '') {
-    infoArr[index].activated = true
-    infoArr[index].valid = false
-  }
-  if (infoArr[index].val === '' && infoArr[index].activated) {
-    infoArr[index].error = 'Field cant be empty'
-    infoArr[index].valid = false
-  }
-  if (infoArr[index].val !== '' && infoArr[index].activated && !(infoArr[index].pattern.test(infoArr[index].val))) {
-    infoArr[index].error = infoArr[index].errorText
-    infoArr[index].valid = false
-  }
-  if (infoArr[index].activated && (infoArr[index].pattern.test(infoArr[index].val))) {
-
-    infoArr[index].error = ''
-    infoArr[index].valid = true
-  }
-}
-
-let validatedAuth = computed((): boolean => {
-  let validCount: number = 0
-  auth.value.forEach((el) => {
-    if(el.valid){
-      validCount++
-    }
-  })
-  return validCount === auth.value.length;
-})
-
+/*  Send email with password to user email */
 const SendEmail = (): void => {
   let authData = {
     email: auth.value[0].val
   }
+  /* must be realized with back-end */
   console.log(authData)
 
   modal.value = true
- // UiStore.toMainLayout()
+
 }
 
 </script>

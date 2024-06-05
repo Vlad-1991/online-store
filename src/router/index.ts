@@ -138,6 +138,7 @@ const router: Router = createRouter({
 router.beforeEach((to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext): void => {
 
   const AuthStore = useAuthStore()
+  /* routes with query params not available except Catalog, if route has query params - redirect to this route without params */
   if (to.name !== 'Catalog' && Object.keys(to.query).length > 0) {
     const { name, params, hash } = to;
 
@@ -150,6 +151,7 @@ router.beforeEach((to: RouteLocationNormalized, from: RouteLocationNormalized, n
       })
       return
     }
+    /* all routes on Auth Layout redirect to Home page, if user already authorized */
   }else if(AuthStore.isAuthentificated && (to.name === 'Signin' || to.name === 'Signup' || to.name === 'Forgot Password')){
     next('/')
     return
