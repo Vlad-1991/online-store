@@ -1,11 +1,11 @@
 <template lang="pug">
   div.wrapper
     the-navbar
-    div.container.with-nav
+    div.container.with-nav.mb50
       TheBreadCrumbs.breadcrumbs.mt20(v-if="breadcrumbs" :breadcrumbsVal="breadcrumbs")
       error-message.mt20(v-if="UiStore.getErrorMessage")
       router-view
-    div(class="footer") Footer
+    the-footer
 </template>
 
 <!-- main layout contains navbar, wrapper of: breadcrumbs, error message (if exists)
@@ -21,6 +21,7 @@ import {load} from "@/services/api/requests";
 import {categoriesType, productWithId} from "@/utils/requestTypes";
 import ErrorMessage from "@/components/ui/ErrorMessage.vue";
 import {generateBreadcrumbs, getCategoryAndSubcategory} from "@/utils/breadcrumbs";
+import TheFooter from "@/components/ui/TheFooter.vue";
 
 const route = useRoute()
 const UiStore = useUiStore()

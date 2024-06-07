@@ -171,9 +171,11 @@ h3 {
 .container.with-nav {
     margin-top: 70px;
     position: relative;
-    margin-bottom: calc(2 * var(--offset));
+    margin-bottom: 200px;
     width: 100%;
     min-height: 100vh;
+    /*border: 1px solid red;*/
+
 }
 
 .auth-container {
@@ -647,10 +649,22 @@ h3 {
 }
 
 .footer {
-    position: relative;
-    border: 1px solid red;
+    display: flex;
+    flex-direction: column;
+    row-gap: 20px;
+    position: absolute;
+    width: 100%;
+    background: var(--main-lightblue);
+    bottom: 0;
+    left: 0;
+    justify-content: center;
+    align-items: center;
     padding-left: 10px;
     padding-right: 10px;
+    box-sizing: border-box;
+    z-index: 100;
+    padding-top: 50px;
+    padding-bottom: 50px;
 }
 
 .wrapper {
@@ -1097,36 +1111,15 @@ fieldset {
     color: red;
 }
 
-/*.button-container {*/
-/*    position: relative; !* Встановлює відносне позиціонування для контейнера *!*/
-/*    width: 100%;*/
-/*    text-align: center; !* Вирівнює кнопку по центру горизонтально *!*/
-/*    margin: 50px 0; !* Відступи для демонстрації *!*/
-/*}*/
+.footer-social{
+    display: flex;
+    column-gap: 30px;
+}
 
+.footer-social img{
+    transition: 0.35s ease;
+}
 
-/*.cat-button {*/
-/*    background: none;*/
-/*    border: none;*/
-/*    cursor: pointer;*/
-/*    outline: none;*/
-/*    padding: 0;*/
-/*    position: absolute; !* Абсолютне позиціонування *!*/
-/*    top: 50%; !* Вирівнювання по вертикалі *!*/
-/*    left: 50%; !* Вирівнювання по горизонталі *!*/
-/*    transform: translate(-50%, -50%); !* Центрування елемента *!*/
-/*}*/
-
-/*.arrow {*/
-/*    display: inline-block;*/
-/*    transition: transform 0.3s ease;*/
-/*}*/
-
-/*.opened {*/
-/*    transform: rotate(180deg);*/
-/*    transition: transform 0.3s ease;*/
-/*}*/
-
-/*.closed {*/
-/*    transition: transform 0.3s ease;*/
-/*}*/
+.footer-social img:hover{
+    filter: brightness(3);
+}
