@@ -1,4 +1,4 @@
-import {arrInfoType, fieldType} from "@/utils/requestTypes";
+import {arrInfoType, fieldType} from "@/utils/types/requestTypes";
 
 /* validation of any text, phone input field, field cant be empty and must be valid by own RegExp pattern.
  If field activated once, then validation will be present */

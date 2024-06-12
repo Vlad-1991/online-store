@@ -114,3 +114,8 @@ export interface authType {
     userName: string,
     userId: string
 }
+
+export interface breadcrumbsArrayType {
+    text: string,
+    link: string
+}

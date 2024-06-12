@@ -97,8 +97,8 @@ import CategorySide from "@/components/ui/CategorySide.vue";
 const CartStore = useCartStore()
 import {useUiStore} from "@/stores/UiStore";
 import ToggleSidebar from "@/components/ui/ToggleSidebar.vue";
-import {arrInfoType, productInCartType} from "@/utils/requestTypes";
-import {validateChecked, validateFieldWithIndex} from "@/utils/validation";
+import {arrInfoType, productInCartType} from "@/utils/types/requestTypes";
+import {validateChecked, validateFieldWithIndex} from "@/utils/composables/validation";
 
 const UiStore = useUiStore()
 let firstStep = ref(true)

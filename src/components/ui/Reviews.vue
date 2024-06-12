@@ -48,7 +48,7 @@ if user isnt authorized, render message, that authorization needed to send ratin
 if user already left review, render message "You have already left a review or rating on this product" -->
 <script setup lang="ts">
 import {ref} from "vue";
-import {reviewsType} from "@/utils/requestTypes";
+import {reviewsType} from "@/utils/types/requestTypes";
 
 const emit = defineEmits(['sendReview', 'backToProduct'])
 const props = defineProps<{

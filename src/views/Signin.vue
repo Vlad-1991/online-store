@@ -22,10 +22,10 @@
 import {computed, Ref, ref} from "vue";
 import router from "@/router";
 import {useUiStore} from "@/stores/UiStore";
-import {arrInfoType} from "@/utils/requestTypes";
+import {arrInfoType} from "@/utils/types/requestTypes";
 const UiStore = useUiStore()
-import {validateFieldWithIndex} from "@/utils/validation";
-import {checkAllFields} from "@/utils/validation";
+import {validateFieldWithIndex} from "@/utils/composables/validation";
+import {checkAllFields} from "@/utils/composables/validation";
 
 /* array with all info about fields - email and password, with validation rules */
 const auth: Ref<arrInfoType[]> = ref([

@@ -29,9 +29,9 @@
 import {computed, Ref, ref} from "vue";
 import router from "@/router";
 import {useUiStore} from "@/stores/UiStore";
-import {arrInfoType} from "@/utils/requestTypes";
+import {arrInfoType} from "@/utils/types/requestTypes";
 const UiStore = useUiStore()
-import {validateFieldWithIndex, checkAllFields} from "@/utils/validation";
+import {validateFieldWithIndex, checkAllFields} from "@/utils/composables/validation";
 
 /* array with all info about fields - email, name, password and repeated password with validation rules */
 const auth: Ref<arrInfoType[]> = ref([

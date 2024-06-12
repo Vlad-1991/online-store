@@ -49,8 +49,9 @@ import ModalQuickOrder from "@/components/ui/ModalQuickOrder.vue";
 import Reviews from "@/components/ui/Reviews.vue";
 import ToggleSidebar from "@/components/ui/ToggleSidebar.vue";
 import {load} from "@/services/api/requests";
-import {productWithId, ratingInfoType, subcategoryType} from "@/utils/requestTypes";
-import {addCart} from "@/utils/product";
+import {productWithId, ratingInfoType, subcategoryType} from "@/utils/types/requestTypes";
+import {useCartStore} from "@/stores/CartStore";
+const CartStore = useCartStore()
 const route = useRoute()
 
 const AuthStore = useAuthStore()
@@ -74,7 +75,21 @@ try {
 }
 
 const initAddCart = () => {
-  addCart(product, message_overload, cart_qty, product_added)
+  // addCart(product, message_overload, cart_qty, product_added)
+  let resp = CartStore.addToCart(product, cart_qty.value)
+  if(resp === 'success'){
+    cart_qty.value = 1
+    product_added.value = true
+    setTimeout(() => {
+      product_added.value = false
+    }, 3000)
+
+  }else if(resp === 'overloaded'){
+    message_overload.value = true
+    cart_qty.value = 1
+    setTimeout(() => {message_overload.value = false}, 3000)
+  }
+
 }
 
 let product = ref()
@@ -171,7 +186,6 @@ const writeCategoryAndSubcategory = (): void => {
     })
 
     subcategories_array.forEach((subcat: subcategoryType): void => {
-      console.log(subcat)
       if (subcat.url === categoryInfo.subCatUrl) {
         current_subcategory = subcat.text
       }
@@ -186,6 +200,5 @@ writeCategoryAndSubcategory()
 const toChangeLoader = () : void => {
   loading.value = false
 }
-//console.log(product)
 
 </script>

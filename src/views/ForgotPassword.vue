@@ -18,8 +18,8 @@
 import {Ref, ref} from "vue";
 import {useUiStore} from "@/stores/UiStore";
 import AppModal from "@/components/ui/AppModal.vue";
-import {arrInfoType} from "@/utils/requestTypes";
-import {validateFieldWithIndex} from "@/utils/validation";
+import {arrInfoType} from "@/utils/types/requestTypes";
+import {validateFieldWithIndex} from "@/utils/composables/validation";
 
 const UiStore = useUiStore()
 

@@ -1,11 +1,10 @@
 import {defineStore} from "pinia";
-import {authType} from "@/utils/requestTypes";
+import {authType} from "@/utils/types/storeTypes";
 
 /* stub to simulate, that user authorized */
 let stub = (): authType => {
     return {userName: 'Joy Carson', userId: 'joycarson@gmail.com'}
 }
-
 
 
 export const useAuthStore = defineStore("AuthStore", {

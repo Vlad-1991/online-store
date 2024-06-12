@@ -22,7 +22,7 @@
 <script setup lang="ts">
 import {Ref, ref} from "vue";
 import {useRoute} from "vue-router";
-import {categoriesType} from "@/utils/requestTypes";
+import {categoriesType} from "@/utils/types/requestTypes";
 let route = useRoute()
 
 const props = defineProps<{

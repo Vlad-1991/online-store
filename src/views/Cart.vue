@@ -28,7 +28,7 @@ import {useUiStore} from "@/stores/UiStore";
 import {useCartStore} from "@/stores/CartStore";
 import CategorySide from "@/components/ui/CategorySide.vue";
 import ToggleSidebar from "@/components/ui/ToggleSidebar.vue";
-import {productInCartType} from "@/utils/requestTypes";
+import {productInCartType} from "@/utils/types/requestTypes";
 const CartStore = useCartStore()
 const UiStore = useUiStore()
 let products: productInCartType | null = CartStore.getCartProducts

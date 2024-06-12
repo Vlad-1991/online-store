@@ -1,6 +1,6 @@
 /* to filter products according to search query, if search query isnt exist - load all products */
 import {ref, Ref} from "vue";
-import {productWithId} from "@/utils/requestTypes";
+import {productWithId} from "@/utils/types/requestTypes";
 
 export const filterSearchedProducts = (query: string, searchQuery: Ref<string>, products: Ref<productWithId[]>,
                                        searchQueryProducts: Ref<productWithId[]>): void => {

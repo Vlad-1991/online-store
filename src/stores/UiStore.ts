@@ -1,16 +1,19 @@
 import {defineStore} from "pinia";
+import {breadcrumbsArrayType} from "@/utils/types/requestTypes";
+import {UiState} from "@/utils/types/storeTypes";
 
 /* in this store saved all states of UI elements */
 export const useUiStore = defineStore("UiStore", {
-    state: () => {
+    state: (): UiState => {
             return {
                 showBestsellers: false,
                 cat: '',
                 subcat: '',
-                categories: [],
+                categories: [] as string[],
                 checkboxBestSeller: false,
                 sidebar: '-500px',
-                errorMessage: ''
+                errorMessage: '',
+                breadcrumbsArray: [] as breadcrumbsArrayType[]
         }
     },
     getters: {
@@ -19,7 +22,7 @@ export const useUiStore = defineStore("UiStore", {
                 return this.showBestsellers
         },
         /* return list of all categories and subcategories */
-        getAllCategories(): [] | never[] {
+        getAllCategories(): string[] | never[] {
             return this.categories
         },
         /* return value of bestseller checkbox */
@@ -41,6 +44,14 @@ export const useUiStore = defineStore("UiStore", {
         /* return current error message */
         getErrorMessage(): string {
             return this.errorMessage
+        },
+        /* get breadcrumbs array to render in breadcrumbs component */
+        getBreadcrumbs(): breadcrumbsArrayType[] {
+            if(this.breadcrumbsArray){
+                return this.breadcrumbsArray
+            }else {
+                return []
+            }
         }
     },
     actions: {
@@ -64,6 +75,11 @@ export const useUiStore = defineStore("UiStore", {
             }else{
                 this.sidebar = "-500px"
             }
+        },
+        /* set new value of breadcrumbs array, from current route */
+        setBreadcrumbs(arr: breadcrumbsArrayType[]): void{
+
+            this.breadcrumbsArray = arr
         },
         /* to save error.message from server response to Store */
         setErrorMessage(e: string): void {

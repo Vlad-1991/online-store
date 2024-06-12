@@ -24,8 +24,8 @@ import SortingSelector from "@/components/ui/SortingSelector.vue";
 import SearchProducts from "@/components/ui/SearchProducts.vue";
 import ToggleSidebar from "@/components/ui/ToggleSidebar.vue";
 import {load} from "@/services/api/requests";
-import {productWithId} from "@/utils/requestTypes";
-import {filterSearchedProducts} from "@/utils/search";
+import {productWithId} from "@/utils/types/requestTypes";
+import {filterSearchedProducts} from "@/utils/composables/search";
 
 const products: Ref<productWithId[]> = ref([]);
 const loading = ref(false)

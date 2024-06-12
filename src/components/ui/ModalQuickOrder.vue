@@ -25,8 +25,8 @@
 
 <script setup lang="ts">
 import {ref} from "vue";
-import {productType} from "@/utils/requestTypes";
-import {validateField} from "@/utils/validation"
+import {productType} from "@/utils/types/requestTypes";
+import {validateField} from "@/utils/composables/validation"
 
 const orderSended = ref(false)
 

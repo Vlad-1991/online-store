@@ -1,13 +1,14 @@
 import {defineStore} from "pinia";
-import {productInCartType} from "@/utils/requestTypes";
-
-type state = { cart: productInCartType }
-
+import {productInCartType} from "@/utils/types/requestTypes";
+import {CartState} from "@/utils/types/storeTypes";
 
 export const useCartStore = defineStore("CartStore", {
-    state: (): state => {
+    state: (): CartState => {
         return {
-            cart: {}
+            cart: {},
+            message_overload: false,
+            cart_qty: 1,
+            product_added: false
         }
     },
     getters: {
@@ -37,20 +38,41 @@ export const useCartStore = defineStore("CartStore", {
     actions: {
         /* add to store product, added to cart, and add this product to local storage
         if qty > 100 nothing will be added, this is limit per order of logic this online store */
-        addToCart(product: productInCartType): void {
+        addToCart(product: productInCartType, qty: number): string {
+            // @ts-ignore
+            let key = product[Object.keys(product)].id
+            let cur_product = this.getProductById(key)
+            let prod_in_cart: productInCartType = {}
 
-            let key: string = product[Object.keys(product)[0]].id;
-
-            if(this.cart[key]){
-                this.cart[key].qty += product[Object.keys(product)[0]].qty
-                if(this.cart[key].qty > 100){
-                    this.cart[key].qty = 100
+            if (cur_product && (cur_product.qty >= 100)) {
+                return 'overloaded'
+            } else {
+                prod_in_cart[key] = {
+                    // @ts-ignore
+                    id: product[Object.keys(product)].id,
+                    qty: qty,
+                    // @ts-ignore
+                    name: product[Object.keys(product)].name,
+                    // @ts-ignore
+                    price: product[Object.keys(product)].price
                 }
-            }else{
-                this.cart[key] = product[Object.keys(product)[0]];
-            }
 
-            localStorage.setItem("cart", JSON.stringify(this.cart))
+                let cart_key = prod_in_cart[Object.keys(product)[0]].id;
+
+                if (this.cart[cart_key]) {
+
+                    this.cart[cart_key].qty += prod_in_cart[Object.keys(product)[0]].qty
+
+                    if (this.cart[cart_key].qty > 100) {
+                        this.cart[cart_key].qty = 100
+                    }
+                } else {
+                    this.cart[cart_key] = prod_in_cart[Object.keys(product)[0]];
+                }
+
+                localStorage.setItem("cart", JSON.stringify(this.cart))
+                return 'success'
+            }
         },
         /* update count of product in cart with validation 1-100 items can be in cart */
         updateCount(payload: {id: string, cnt: number}): void{
@@ -66,7 +88,7 @@ export const useCartStore = defineStore("CartStore", {
         /* delete selected product from cart and local storage */
         deleteProduct(id: string): void{
             delete this.cart[id]
-            console.log(this.cart)
+
             localStorage.setItem("cart", JSON.stringify(this.cart))
         },
         /* get all products from local storage to Cart Store, this function will call one time, when user open website */

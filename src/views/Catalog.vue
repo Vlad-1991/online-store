@@ -12,7 +12,7 @@
 </template>
 
 <script setup lang="ts">
-import {catType, productWithId, subcatType} from "@/utils/requestTypes";
+import {catType, productWithId, subcatType} from "@/utils/types/requestTypes";
 import ProductList from "@/components/ProductList.vue";
 import {useRoute} from "vue-router";
 import {useRouter} from "vue-router";
@@ -24,7 +24,7 @@ import SortingSelector from "@/components/ui/SortingSelector.vue";
 import SearchProducts from "@/components/ui/SearchProducts.vue";
 import ToggleSidebar from "@/components/ui/ToggleSidebar.vue";
 import {load} from "@/services/api/requests";
-import {filterSearchedProducts} from "@/utils/search";
+import {filterSearchedProducts} from "@/utils/composables/search";
 
 const UiStore = useUiStore()
 

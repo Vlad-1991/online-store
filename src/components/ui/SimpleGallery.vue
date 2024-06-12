@@ -17,7 +17,7 @@
 import PhotoSwipeLightbox from 'photoswipe/lightbox';
 import 'photoswipe/style.css';
 import {onMounted, onUnmounted} from "vue";
-import {imageType} from "@/utils/requestTypes";
+import {imageType} from "@/utils/types/requestTypes";
 
 const props = defineProps<{
   galleryID: string,
