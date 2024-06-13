@@ -1,8 +1,7 @@
 <template lang="pug">
-  //div.breadcrumbs(v-html="breadcrumbsVal")
   div.breadcrumbs
     span(v-if="breadcrumbs" v-for="(str, index) in breadcrumbs" )
-      a.link.inline-block(:href="str.link" :class="(index === (breadcrumbs.length - 1)) ? 'active_category' : ''") {{str.text}}
+      router-link.link.inline-block(:to="str.link" :class="(index === (breadcrumbs.length - 1)) ? 'active_category' : ''") {{str.text}}
       span(v-if="index < breadcrumbs.length - 1") &nbsp;>
 </template>
 
@@ -141,6 +140,12 @@ async function getProductDetails(id: string | string[]): Promise<void> {
     UiStore.setErrorMessage(e.message)
   }
 }
+
+// const handleLink = (link: string) => {
+//   if(link.indexOf('subcategory') !== -1){
+//     UiStore.toShowProductsInCategory(link)
+//   }
+// }
 
 let categories = UiStore.getAllCategories
 

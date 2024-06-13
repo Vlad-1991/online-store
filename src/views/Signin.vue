@@ -14,7 +14,7 @@
 
     button(class="btn main mt10" type="sumbit" :disabled="!validatedAuth" @click="SignIn") Sign In
     div.mt10
-      router-link(to="/forgot" tag="div")
+      router-link(:to="{name: 'Forgot Password'}" tag="div")
         small.link Forgot Password?
 </template>
 
@@ -59,7 +59,7 @@ const SignIn = (): void => {
   }
   /* there will be sending data to server, if response positive - redirect to catalog page */
   console.log(authData)
-  router.push('/catalog')
+  router.push({name: 'Catalog'})
 }
 
 </script>

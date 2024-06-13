@@ -1,13 +1,14 @@
 <template lang="pug">
-  ToggleSidebar(@toggleSideBar="UiStore.toggleSidebar()")
-  CategorySide.category-side(:categories="UiStore.getAllCategories" :checkboxBestSeller="UiStore.getCheckboxBestSeller"
-    :style="{left: UiStore.sidebar}").mt20
-  main.main-side
-    h1.ml20 Our Bestsellers
-    SearchProducts(@changedSearch="activateSearch")
-    SortingSelector(@sorting="loadProductsHome")
-    div(v-if="loading").loader
-    product-list(v-else :products="searchQueryProducts")
+  div
+    ToggleSidebar(@toggleSideBar="UiStore.toggleSidebar()")
+    CategorySide.category-side(:categories="UiStore.getAllCategories" :checkboxBestSeller="UiStore.getCheckboxBestSeller"
+      :style="{left: UiStore.sidebar}").mt20
+    main.main-side
+      h1.ml20 Our Bestsellers
+      SearchProducts(@changedSearch="activateSearch")
+      SortingSelector(@sorting="loadProductsHome")
+      div(v-if="loading").loader
+      product-list(v-else :products="searchQueryProducts")
 </template>
 
 

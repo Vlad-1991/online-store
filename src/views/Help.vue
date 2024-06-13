@@ -1,9 +1,10 @@
 <template lang="pug">
-  ToggleSidebar(@toggleSideBar="UiStore.toggleSidebar()")
-  CategorySide.category-side(:categories="UiStore.getAllCategories" :checkboxBestSeller="UiStore.getCheckboxBestSeller"
-    :style="{left: UiStore.sidebar}").mt20
-  main.main-side
-    h1.ml20 Help
+  div
+    ToggleSidebar(@toggleSideBar="UiStore.toggleSidebar()")
+    CategorySide.category-side(:categories="UiStore.getAllCategories" :checkboxBestSeller="UiStore.getCheckboxBestSeller"
+      :style="{left: UiStore.sidebar}").mt20
+    main.main-side
+      h1.ml20 Help
 </template>
 
 <!-- Component Help - contains useful topics about Online Store handling (to add more details in future) -->

@@ -1,26 +1,27 @@
 <template lang="pug">
-  div(class="modal-backdrop")
-  div.modal
-    div.float-right(@click="emit('close')") X
-    div(v-if="!orderSended")
-      h3(v-if="title") {{ title }}
-      div.mb50
-        div(class="form-control" :class="{invalid: phone.error}")
-          label(for="phone")  *Phone
-          input(type="tel"
-            placeholder="123-456-7890" id="phone" v-model.trim="phone.val" @input="validateField(phone)")
-          small(v-if="phone.error")  {{phone.error}}
+  div
+    div(class="modal-backdrop")
+    div.modal
+      div.float-right(@click="emit('close')") X
+      div(v-if="!orderSended")
+        h3(v-if="title") {{ title }}
+        div.mb50
+          div(class="form-control" :class="{invalid: phone.error}")
+            label(for="phone")  *Phone
+            input(type="tel"
+              placeholder="123-456-7890" id="phone" v-model.trim="phone.val" @input="validateField(phone)")
+            small(v-if="phone.error")  {{phone.error}}
 
-        div(class="form-control" :class="{invalid: name.error}")
-          label(for="name")  *Full Name
-          input(type="text"
-            placeholder="John Doe" id="name" v-model.trim="name.val" @input="validateField(name)")
-          small(v-if="name.error")  {{name.error}}
-      div.mt10
-        button.primary.btn(@click="sendQuickOrder" :disabled="!(name.valid && phone.valid)" type="button") Order Now
-    div.mt50(v-else)
-      div.mb20 Customer Service Team will call you soon as possible, thanks for order
-      button.primary.btn.block.center(@click="emit('close')") Ok
+          div(class="form-control" :class="{invalid: name.error}")
+            label(for="name")  *Full Name
+            input(type="text"
+              placeholder="John Doe" id="name" v-model.trim="name.val" @input="validateField(name)")
+            small(v-if="name.error")  {{name.error}}
+        div.mt10
+          button.primary.btn(@click="sendQuickOrder" :disabled="!(name.valid && phone.valid)" type="button") Order Now
+      div.mt50(v-else)
+        div.mb20 Customer Service Team will call you soon as possible, thanks for order
+        button.primary.btn.block.center(@click="emit('close')") Ok
 </template>
 
 <script setup lang="ts">

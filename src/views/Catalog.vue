@@ -1,14 +1,15 @@
 <template lang="pug">
-  ToggleSidebar(@toggleSideBar="UiStore.toggleSidebar()")
-  CategorySide.category-side(:categories="UiStore.getAllCategories" :checkboxBestSeller="checkboxBestSeller"
-    @showBestSellers="changeShowBestsellers" @showCategory="showProductsInCategory" @showSubCategory="showProductsInSubCategory"
-    :style="{left: UiStore.sidebar}").mt20
-  main.main-side
-    h1.ml20 Catalog
-    SearchProducts(@changedSearch="activateSearch")
-    SortingSelector(@sorting="loadProductsCatalog")
-    div(v-if="loading").loader
-    product-list(v-else :products="searchQueryProducts")
+  div
+    ToggleSidebar(@toggleSideBar="UiStore.toggleSidebar()")
+    CategorySide.category-side(:categories="UiStore.getAllCategories" :checkboxBestSeller="checkboxBestSeller"
+      @showBestSellers="changeShowBestsellers" @showCategory="showProductsInCategory" @showSubCategory="showProductsInSubCategory"
+      :style="{left: UiStore.sidebar}").mt20
+    main.main-side
+      h1.ml20 Catalog
+      SearchProducts(@changedSearch="activateSearch")
+      SortingSelector(@sorting="loadProductsCatalog")
+      div(v-if="loading").loader
+      product-list(v-else :products="searchQueryProducts")
 </template>
 
 <script setup lang="ts">
@@ -132,10 +133,18 @@ onMounted(async (): Promise<void> => {
 
 /* if route changed to main Catalog (wihout query) - hide bestseller checkbox and show all products from catalog */
 watch(route, (): void => {
-if(!route.query.category){
+
+
+if(route.query.subcategory){
+  showProductsInSubCategory({cat: route.query.category, subcat: route.query.subcategory})
+}else if(route.query.category){
+  showProductsInCategory({cat: route.query.category})
+}else if(!route.query.category && route.name === 'Catalog'){
   checkboxBestSeller.value = false
-    products.value = all_products.value
-  }
+ loadProductsCatalog()
+}
+
+
 })
 
 /* change and save state of bestseller checkbox in Store */

@@ -1,42 +1,41 @@
 <template lang="pug">
-  ToggleSidebar(@toggleSideBar="UiStore.toggleSidebar()")
-  CategorySide.category-side(:categories="UiStore.getAllCategories" :checkboxBestSeller="UiStore.getCheckboxBestSeller"
-    :style="{left: UiStore.sidebar}").mt20
-  main.main-side
-    div(v-if="!showReviews")
-      div.product(v-if="product")
-        h1.ml20 {{ product[Object.keys(product)].name }}
-        div.rating Rating {{product[Object.keys(product)].rating}} of {{MAX_RATING}}
-          span.reviews(@click="showReviews = true") {{product[Object.keys(product)].reviews.length}} Reviews
-        div.image_card
-          div
-            div(v-if="loading").loader
-            SimpleGallery(galleryID="my-test-gallery-primary" :images="product[Object.keys(product)].image" class="card-image" @imgLoaded="toChangeLoader"
-              :name="product[Object.keys(product)].name")
-          div.flex-box
-            h2.price ${{product[Object.keys(product)].price}}
+  div
+    ToggleSidebar(@toggleSideBar="UiStore.toggleSidebar()")
+    CategorySide.category-side(:categories="UiStore.getAllCategories" :checkboxBestSeller="UiStore.getCheckboxBestSeller"
+      :style="{left: UiStore.sidebar}").mt20
+    main.main-side
+      div(v-if="!showReviews")
+        div.product(v-if="product")
+          h1.ml20 {{ product[Object.keys(product)].name }}
+          div.rating Rating {{product[Object.keys(product)].rating}} of {{MAX_RATING}}
+            span.reviews(@click="showReviews = true") {{product[Object.keys(product)].reviews.length}} Reviews
+          div.image_card
             div
-              button.btn_cart(@click="decrease" type="button") -
-              input.btn_cart_input(type="number" min="1" max="100" step="1" pattern="[0-9]{3}" v-model="cart_qty" @input="onInput($event.target.value)")
-              button.btn_cart(@click="increase" type="button") +
-            span
-              button.btn.danger.add_to_cart(@click="initAddCart" type="button") Add to Cart
-              h3.inline-block.price_sum(v-if="cart_qty > 1") Summary: ${{(cart_qty * parseFloat(product[Object.keys(product)].price)).toFixed(2)}}
-              h3.inline-block(v-if="message_overload") Max count of this position is 100
-              h3.primary.inline-block(v-if="product_added") Product added to Cart
-              button.btn.orange.add_to_cart.block.mt20(@click="modal = true" type="button") Buy Now
-        div.description(v-html="product[Object.keys(product)].description")
-      div.ml20(v-else)
-        h1 There are no this product
-        router-link.link(to="/catalog") Back to Catalog
-    div.reviews-block(v-else)
-      Reviews(:is-authentificated="AuthStore.isAuthentificated" :reviews="product[Object.keys(product)].reviews" :reviewSended="reviewSended"
-      @sendReview="sendReview" @backToProduct="showReviews = false")
+              div(v-if="loading").loader
+              SimpleGallery(galleryID="my-test-gallery-primary" :images="product[Object.keys(product)].image" class="card-image" @imgLoaded="toChangeLoader"
+                :name="product[Object.keys(product)].name")
+            div.flex-box
+              h2.price ${{product[Object.keys(product)].price}}
+              div
+                button.btn_cart(@click="decrease" type="button") -
+                input.btn_cart_input(type="number" min="1" max="100" step="1" pattern="[0-9]{3}" v-model="cart_qty" @input="onInput($event.target.value)")
+                button.btn_cart(@click="increase" type="button") +
+              span
+                button.btn.danger.add_to_cart(@click="initAddCart" type="button") Add to Cart
+                h3.inline-block.price_sum(v-if="cart_qty > 1") Summary: ${{(cart_qty * parseFloat(product[Object.keys(product)].price)).toFixed(2)}}
+                h3.inline-block(v-if="message_overload") Max count of this position is 100
+                h3.primary.inline-block(v-if="product_added") Product added to Cart
+                button.btn.orange.add_to_cart.block.mt20(@click="modal = true" type="button") Buy Now
+          div.description(v-html="product[Object.keys(product)].description")
+        div.ml20(v-else)
+          h1 There are no this product
+          router-link.link(:to="{name: 'Catalog'}") Back to Catalog
+      div.reviews-block(v-else)
+        Reviews(:is-authentificated="AuthStore.isAuthentificated" :reviews="product[Object.keys(product)].reviews" :reviewSended="reviewSended"
+        @sendReview="sendReview" @backToProduct="showReviews = false")
 
-  teleport(to="body")
-    modal-quick-order(v-if="modal" title="Quick Order" @close="modal = false" :product="product[Object.keys(product)]" :qty="cart_qty")
-
-
+    teleport(to="body")
+      modal-quick-order(v-if="modal" title="Quick Order" @close="modal = false" :product="product[Object.keys(product)]" :qty="cart_qty")
 </template>
 
 <script setup lang="ts">

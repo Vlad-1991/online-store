@@ -4,13 +4,13 @@
     ul(class="list list-default")
       li(v-for="(category, index) in categories" :key="Object.keys(category)[0]" class="li-border")
         div.categories-flex
-          router-link.category.inline-block.w100.li-highlight(:to="`/catalog?category=${Object.keys(category)[0]}`"
+          router-link.category.inline-block.w100.li-highlight(:to="{name: 'Catalog', query: {category: Object.keys(category)[0]}}"
             :class="$route.query.category === Object.keys(category)[0] ? 'active_category' : ''"
             @click="$emit('showCategory', {cat: Object.keys(category)[0]})") {{category[Object.keys(category)[0]].text}}
           span.button-cat(:class="switched[index] ? 'opened' : 'closed'" @click="switchCatButton(index)") ^
 
         li.subcat.li-highlight(v-if="switched[index]" v-for="subcat in category[Object.keys(category)[0]].subcategory" :key="subcat.url")
-          router-link.category.block.w100.li-highlight(:to="`/catalog?category=${Object.keys(category)[0]}&subcategory=${subcat.url}`"
+          router-link.category.block.w100.li-highlight(:to="{name: 'Catalog', query: {category: Object.keys(category)[0], subcategory: subcat.url} }"
             :class="$route.query.subcategory === subcat.url ? 'active_category' : ''"
             @click="$emit('showSubCategory', {cat: Object.keys(category)[0], subcat: subcat.url})") {{subcat.text}}
 

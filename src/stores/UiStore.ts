@@ -84,6 +84,10 @@ export const useUiStore = defineStore("UiStore", {
         /* to save error.message from server response to Store */
         setErrorMessage(e: string): void {
             this.errorMessage = e
+        },
+        /* activate trigger if clicked breadcrumbs category */
+        toShowProductsInCategory(link: string): void {
+
         }
     }
 })

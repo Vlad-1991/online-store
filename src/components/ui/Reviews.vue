@@ -40,7 +40,7 @@
     h1 Reviews
     div.reviews-back.mb20(@click="emit('backToProduct')") Back to Product
     span.mr10 To send rating and review please
-    router-link(to="/signin")
+    router-link(:to="{name: 'Sign In'}")
       button.btn.main(type="button") Sign In
 </template>
 

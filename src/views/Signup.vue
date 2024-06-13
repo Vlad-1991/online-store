@@ -94,6 +94,6 @@ const SignUp = (): void => {
   }
   /* there will be sending data to server, if response positive - redirect to catalog page */
   console.log(authData)
-  router.push('/catalog')
+  router.push({name: 'Catalog'})
 }
 </script>

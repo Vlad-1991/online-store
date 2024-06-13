@@ -1,89 +1,90 @@
 <template lang="pug">
-  ToggleSidebar(@toggleSideBar="UiStore.toggleSidebar()")
-  CategorySide.category-side(:categories="UiStore.getAllCategories" :checkboxBestSeller="UiStore.getCheckboxBestSeller"
-    :style="{left: UiStore.sidebar}").mt20
-  main.main-side
-    h1.ml20 Checkout
-    div(v-if="firstStep")
-      table(class="table")
-        thead
-        tr
-          th  #
-          th  Title
-          th  Qty
-          th Price
-          th  Sum
-        tbody
-          tr(v-for="(product, index) in products" :key="product.id")
-            td.td-left {{ ++index }}
-            td.td-left {{ product.name }}
-            td.td-left  {{ product.qty }}
-            td.td-left  $ {{ product.price }}
-            td.td-left  $ {{ (product.qty * parseFloat(product.price)).toFixed(2) }}
-      h3 Summary: ${{CartStore.getSummary.toFixed(2)}}
-      input.package.mr10(type="checkbox" v-model="sep_package")
-      span.package Add separate package box for each product
-      div.right
-        button.btn.primary(@click="toSecondStep" type="button") Next
+  div
+    ToggleSidebar(@toggleSideBar="UiStore.toggleSidebar()")
+    CategorySide.category-side(:categories="UiStore.getAllCategories" :checkboxBestSeller="UiStore.getCheckboxBestSeller"
+      :style="{left: UiStore.sidebar}").mt20
+    main.main-side
+      h1.ml20 Checkout
+      div(v-if="firstStep")
+        table(class="table")
+          thead
+          tr
+            th  #
+            th  Title
+            th  Qty
+            th Price
+            th  Sum
+          tbody
+            tr(v-for="(product, index) in products" :key="product.id")
+              td.td-left {{ ++index }}
+              td.td-left {{ product.name }}
+              td.td-left  {{ product.qty }}
+              td.td-left  $ {{ product.price }}
+              td.td-left  $ {{ (product.qty * parseFloat(product.price)).toFixed(2) }}
+        h3 Summary: ${{CartStore.getSummary.toFixed(2)}}
+        input.package.mr10(type="checkbox" v-model="sep_package")
+        span.package Add separate package box for each product
+        div.right
+          button.btn.primary(@click="toSecondStep" type="button") Next
 
-    div(v-else-if="secondStep")
-      form.form-checkout(@submit.prevent)
+      div(v-else-if="secondStep")
+        form.form-checkout(@submit.prevent)
 
-        div(class="form-control")
-          label(for="country") *{{adress[0].label}}
-          select(id="country" v-model="adress[0].val" @change="validateChecked(adress, 0)")
-            option(value="usa")  United States
-            option(value="mexico") Mexico
-            option(value="canada") Canada
+          div(class="form-control")
+            label(for="country") *{{adress[0].label}}
+            select(id="country" v-model="adress[0].val" @change="validateChecked(adress, 0)")
+              option(value="usa")  United States
+              option(value="mexico") Mexico
+              option(value="canada") Canada
 
-        div(class="form-control" :class="{invalid: adress[1].error}")
-          label(for="adress")  *{{adress[1].label}}
-          input(type="text" id="adress" placeholder="Boulevard str 8, fl. 321" v-model.trim="adress[1].val" @input="validateFieldWithIndex(adress, 1)")
-          small(v-if="adress[1].error")  {{adress[1].error}}
+          div(class="form-control" :class="{invalid: adress[1].error}")
+            label(for="adress")  *{{adress[1].label}}
+            input(type="text" id="adress" placeholder="Boulevard str 8, fl. 321" v-model.trim="adress[1].val" @input="validateFieldWithIndex(adress, 1)")
+            small(v-if="adress[1].error")  {{adress[1].error}}
 
-        div(class="form-control" :class="{invalid: adress[2].error}")
-          label(for="zip") *ZIP Code
-          input(type="text" placeholder="90123" id="zip" pattern="[0-9]{5}" v-model.trim="adress[2].val" @input="validateFieldWithIndex(adress, 2)")
-          small(v-if="adress[2].error")  {{adress[2].error}}
+          div(class="form-control" :class="{invalid: adress[2].error}")
+            label(for="zip") *ZIP Code
+            input(type="text" placeholder="90123" id="zip" pattern="[0-9]{5}" v-model.trim="adress[2].val" @input="validateFieldWithIndex(adress, 2)")
+            small(v-if="adress[2].error")  {{adress[2].error}}
 
-        div(class="form-control" :class="{invalid: adress[3].error}")
-          label(for="phone")  *Phone
-          input(type="tel"
-            placeholder="123-456-7890" id="phone" v-model.trim="adress[3].val" @input="validateFieldWithIndex(adress, 3)")
-          small(v-if="adress[3].error")  {{adress[3].error}}
+          div(class="form-control" :class="{invalid: adress[3].error}")
+            label(for="phone")  *Phone
+            input(type="tel"
+              placeholder="123-456-7890" id="phone" v-model.trim="adress[3].val" @input="validateFieldWithIndex(adress, 3)")
+            small(v-if="adress[3].error")  {{adress[3].error}}
 
-        div(class="form-control")
-          label(for="postService") *Post Service
-          select(id="postService" v-model="adress[4].val" @change="validateChecked(adress, 4)")
-            option(value="ups")  UPS
-            option(value="fedex") FedEx
+          div(class="form-control")
+            label(for="postService") *Post Service
+            select(id="postService" v-model="adress[4].val" @change="validateChecked(adress, 4)")
+              option(value="ups")  UPS
+              option(value="fedex") FedEx
 
-        span.flex-buttons
-          button.btn.warning.left(@click="toFirstStep" type="button") Back
-          button.btn.primary.right(@click="toThirdStep" :disabled="!validatedSecondStep" type="button") Next
+          span.flex-buttons
+            button.btn.warning.left(@click="toFirstStep" type="button") Back
+            button.btn.primary.right(@click="toThirdStep" :disabled="!validatedSecondStep" type="button") Next
 
-    div(v-else-if="thirdStep")
-      form.form-checkout(@submit.prevent)
+      div(v-else-if="thirdStep")
+        form.form-checkout(@submit.prevent)
 
-        fieldset
-          legend Select payment method:
-          div
-            input(type="radio" id="creditCart" value="creditCard" v-model="payment[0].val" @change="validateChecked(payment, 0)")
-            label(for="creditCart")  Credit Card
-          div
-            input(type="radio" id="paymentUponReceipt" value="paymentUponReceipt" v-model="payment[0].val" @change="validateChecked(payment, 0)")
-            label(for="paymentUponReceipt")  Payment Upon Receipt
+          fieldset
+            legend Select payment method:
+            div
+              input(type="radio" id="creditCart" value="creditCard" v-model="payment[0].val" @change="validateChecked(payment, 0)")
+              label(for="creditCart")  Credit Card
+            div
+              input(type="radio" id="paymentUponReceipt" value="paymentUponReceipt" v-model="payment[0].val" @change="validateChecked(payment, 0)")
+              label(for="paymentUponReceipt")  Payment Upon Receipt
 
-        div(class="form-control")
-          label(for="comment") Comment for Order
-          textarea(placeholder="Start fill comment..." id="comment" rows="5" cols="33" v-model.trim="payment[1].val")
+          div(class="form-control")
+            label(for="comment") Comment for Order
+            textarea(placeholder="Start fill comment..." id="comment" rows="5" cols="33" v-model.trim="payment[1].val")
 
-        span.flex-buttons
-          button.btn.warning.left(@click="toSecondStep" type="button") Back
-          button.btn.primary.right(:disabled="!validatedThirdStep" @click="createOrder" type="button") Confirm Order
+          span.flex-buttons
+            button.btn.warning.left(@click="toSecondStep" type="button") Back
+            button.btn.primary.right(:disabled="!validatedThirdStep" @click="createOrder" type="button") Confirm Order
 
-    teleport(to="body")
-      app-modal(v-if="modal" title="Order created" @close="modal = false") Your Order # successfully created, please wait message about tracking number
+      teleport(to="body")
+        app-modal(v-if="modal" title="Order created" @close="modal = false") Your Order # successfully created, please wait message about tracking number
 
 </template>
 
