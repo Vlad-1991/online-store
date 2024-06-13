@@ -5,10 +5,7 @@ import {CartState} from "@/utils/types/storeTypes";
 export const useCartStore = defineStore("CartStore", {
     state: (): CartState => {
         return {
-            cart: {},
-            message_overload: false,
-            cart_qty: 1,
-            product_added: false
+            cart: {}
         }
     },
     getters: {

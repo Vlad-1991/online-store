@@ -2,7 +2,7 @@
   ToggleSidebar(@toggleSideBar="UiStore.toggleSidebar()")
   CategorySide.category-side(:categories="UiStore.getAllCategories" :checkboxBestSeller="UiStore.getCheckboxBestSeller"
     :style="{left: UiStore.sidebar}").mt20
-  div.main-side
+  main.main-side
     h1.ml20 Checkout
     div(v-if="firstStep")
       table(class="table")
@@ -24,7 +24,7 @@
       input.package.mr10(type="checkbox" v-model="sep_package")
       span.package Add separate package box for each product
       div.right
-        button.btn.primary(@click="toSecondStep") Next
+        button.btn.primary(@click="toSecondStep" type="button") Next
 
     div(v-else-if="secondStep")
       form.form-checkout(@submit.prevent)
@@ -59,8 +59,8 @@
             option(value="fedex") FedEx
 
         span.flex-buttons
-          button.btn.warning.left(@click="toFirstStep") Back
-          button.btn.primary.right(@click="toThirdStep" :disabled="!validatedSecondStep") Next
+          button.btn.warning.left(@click="toFirstStep" type="button") Back
+          button.btn.primary.right(@click="toThirdStep" :disabled="!validatedSecondStep" type="button") Next
 
     div(v-else-if="thirdStep")
       form.form-checkout(@submit.prevent)
@@ -79,8 +79,8 @@
           textarea(placeholder="Start fill comment..." id="comment" rows="5" cols="33" v-model.trim="payment[1].val")
 
         span.flex-buttons
-          button.btn.warning.left(@click="toSecondStep") Back
-          button.btn.primary.right(:disabled="!validatedThirdStep" @click="createOrder") Confirm Order
+          button.btn.warning.left(@click="toSecondStep" type="button") Back
+          button.btn.primary.right(:disabled="!validatedThirdStep" @click="createOrder" type="button") Confirm Order
 
     teleport(to="body")
       app-modal(v-if="modal" title="Order created" @close="modal = false") Your Order # successfully created, please wait message about tracking number

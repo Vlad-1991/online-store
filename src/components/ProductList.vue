@@ -6,10 +6,10 @@
           router-link(:to="`/product/${product[Object.keys(product)[0]].id}`")
             h4 {{product[Object.keys(product)[0]].name}}
           div
-            img(:src="product[Object.keys(product)[0]].image[0].thumbnailURL" class="card-image")
+            img(:src="product[Object.keys(product)[0]].image[0].thumbnailURL" class="card-image" width="150px" height="150px" :alt="product[Object.keys(product)[0]].name")
           h3 ${{product[Object.keys(product)[0]].price}}
           router-link(:to="`/product/${product[Object.keys(product)[0]].id}`")
-            button.btn.danger Read more
+            button.btn.danger(type="button") Read more
 </template>
 
 <!-- this component renders all products, selected in upper component (Catalog, Home), can be sorted and filtered in upper component

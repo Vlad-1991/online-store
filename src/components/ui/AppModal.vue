@@ -5,7 +5,7 @@
     div.center.mb50
       slot
     div.center.mt10
-      button.primary.btn(@click="returnToCatalog()") Ok
+      button.primary.btn(@click="returnToCatalog()" type="button") Ok
 </template>
 
 <script setup lang="ts">

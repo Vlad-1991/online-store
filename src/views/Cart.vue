@@ -2,7 +2,7 @@
   ToggleSidebar(@toggleSideBar="UiStore.toggleSidebar()")
   CategorySide.category-side(:categories="UiStore.getAllCategories" :checkboxBestSeller="UiStore.getCheckboxBestSeller"
     :style="{left: UiStore.sidebar}").mt20
-  div.main-side
+  main.main-side
     h1.ml20 Cart
     h3(v-if="CartStore.getCartCount === 0") Cart is empty, please add some products first
     div(v-else)
@@ -11,15 +11,15 @@
           span {{product.name}}
           span.cart_flex
             span
-              button.btn_cart(@click="CartStore.updateCount({id: product.id, cnt: --product.qty})") -
+              button.btn_cart(@click="CartStore.updateCount({id: product.id, cnt: --product.qty})" type="button") -
               input.btn_cart_input(type="number" min="1" max="100" step="1" pattern="[0-9]{3}" :value="product.qty" @input="onInput({e: $event.target.value, id: product.id})")
-              button.btn_cart(@click="CartStore.updateCount({id: product.id, cnt: ++product.qty})") +
+              button.btn_cart(@click="CartStore.updateCount({id: product.id, cnt: ++product.qty})" type="button") +
             span.mw100 ${{(parseFloat(product.qty) * parseFloat(product.price)).toFixed(2)}}
             span
               fa(icon="trash-alt" size="lg" @click="CartStore.deleteProduct(product.id)")
         h2.right Summary: ${{parseFloat(CartStore.getSummary).toFixed(2)}}
         router-link(to="/checkout")
-          button.btn.primary.right.btn_inline_block Checkout
+          button.btn.primary.right.btn_inline_block(type="button") Checkout
 </template>
 
 <!-- component of Cart, contains table with added products, names, qty, price, delete button and summary, also has button - go to checkout -->

@@ -3,7 +3,7 @@
   CategorySide.category-side(:categories="UiStore.getAllCategories" :checkboxBestSeller="checkboxBestSeller"
     @showBestSellers="changeShowBestsellers" @showCategory="showProductsInCategory" @showSubCategory="showProductsInSubCategory"
     :style="{left: UiStore.sidebar}").mt20
-  div.main-side
+  main.main-side
     h1.ml20 Catalog
     SearchProducts(@changedSearch="activateSearch")
     SortingSelector(@sorting="loadProductsCatalog")

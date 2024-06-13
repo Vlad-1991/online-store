@@ -1,5 +1,5 @@
 <template lang="pug">
-  div
+  aside
     h1.mt50 Categories
     ul(class="list list-default")
       li(v-for="(category, index) in categories" :key="Object.keys(category)[0]" class="li-border")

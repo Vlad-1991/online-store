@@ -2,7 +2,7 @@
   ToggleSidebar(@toggleSideBar="UiStore.toggleSidebar()")
   CategorySide.category-side(:categories="UiStore.getAllCategories" :checkboxBestSeller="UiStore.getCheckboxBestSeller"
     :style="{left: UiStore.sidebar}").mt20
-  div.main-side
+  main.main-side
     div(v-if="!showReviews")
       div.product(v-if="product")
         h1.ml20 {{ product[Object.keys(product)].name }}
@@ -11,19 +11,20 @@
         div.image_card
           div
             div(v-if="loading").loader
-            SimpleGallery(galleryID="my-test-gallery-primary" :images="product[Object.keys(product)].image" class="card-image" @imgLoaded="toChangeLoader")
+            SimpleGallery(galleryID="my-test-gallery-primary" :images="product[Object.keys(product)].image" class="card-image" @imgLoaded="toChangeLoader"
+              :name="product[Object.keys(product)].name")
           div.flex-box
             h2.price ${{product[Object.keys(product)].price}}
             div
-              button.btn_cart(@click="decrease") -
+              button.btn_cart(@click="decrease" type="button") -
               input.btn_cart_input(type="number" min="1" max="100" step="1" pattern="[0-9]{3}" v-model="cart_qty" @input="onInput($event.target.value)")
-              button.btn_cart(@click="increase") +
+              button.btn_cart(@click="increase" type="button") +
             span
-              button.btn.danger.add_to_cart(@click="initAddCart") Add to Cart
+              button.btn.danger.add_to_cart(@click="initAddCart" type="button") Add to Cart
               h3.inline-block.price_sum(v-if="cart_qty > 1") Summary: ${{(cart_qty * parseFloat(product[Object.keys(product)].price)).toFixed(2)}}
               h3.inline-block(v-if="message_overload") Max count of this position is 100
               h3.primary.inline-block(v-if="product_added") Product added to Cart
-              button.btn.orange.add_to_cart.block.mt20(@click="modal = true") Buy Now
+              button.btn.orange.add_to_cart.block.mt20(@click="modal = true" type="button") Buy Now
         div.description(v-html="product[Object.keys(product)].description")
       div.ml20(v-else)
         h1 There are no this product

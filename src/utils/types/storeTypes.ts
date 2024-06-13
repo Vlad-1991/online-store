@@ -1,6 +1,6 @@
 import {breadcrumbsArrayType, productInCartType} from "@/utils/types/requestTypes";
 
-export type CartState = { cart: productInCartType, message_overload: boolean, cart_qty: number, product_added: boolean }
+export type CartState = { cart: productInCartType }
 
 export interface authType {
     userName: string,

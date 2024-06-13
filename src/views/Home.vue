@@ -1,14 +1,13 @@
 <template lang="pug">
-  div
-    ToggleSidebar(@toggleSideBar="UiStore.toggleSidebar()")
-    CategorySide.category-side(:categories="UiStore.getAllCategories" :checkboxBestSeller="UiStore.getCheckboxBestSeller"
-      :style="{left: UiStore.sidebar}").mt20
-    div.main-side
-      h1.ml20 Our Bestsellers
-      SearchProducts(@changedSearch="activateSearch")
-      SortingSelector(@sorting="loadProductsHome")
-      div(v-if="loading").loader
-      product-list(v-else :products="searchQueryProducts")
+  ToggleSidebar(@toggleSideBar="UiStore.toggleSidebar()")
+  CategorySide.category-side(:categories="UiStore.getAllCategories" :checkboxBestSeller="UiStore.getCheckboxBestSeller"
+    :style="{left: UiStore.sidebar}").mt20
+  main.main-side
+    h1.ml20 Our Bestsellers
+    SearchProducts(@changedSearch="activateSearch")
+    SortingSelector(@sorting="loadProductsHome")
+    div(v-if="loading").loader
+    product-list(v-else :products="searchQueryProducts")
 </template>
 
 
@@ -18,6 +17,7 @@ import CategorySide from "@/components/ui/CategorySide.vue";
 import ProductList from "@/components/ProductList.vue";
 import {onMounted, Ref, ref} from "vue";
 import {useUiStore} from "@/stores/UiStore";
+
 const UiStore = useUiStore()
 import {BESTSELLER_COUNT} from "@/main";
 import SortingSelector from "@/components/ui/SortingSelector.vue";
@@ -73,12 +73,12 @@ const loadProductsHome = async (sorting?: string): Promise<void> => {
           break
 
       }
-    }else{
+    } else {
       loading.value = false
       searchQueryProducts.value = products.value
       filterSearchedProducts(searchQuery.value, searchQuery, products, searchQueryProducts)
     }
-  }catch (e: string | unknown) {
+  } catch (e: string | unknown) {
     UiStore.setErrorMessage(e.message)
   }
 }
@@ -91,7 +91,7 @@ const activateSearch = (query: string) => {
 onMounted(async (): Promise<void> => {
   loading.value = true
 
- await loadProductsHome()
+  await loadProductsHome()
 
   loading.value = false
 })

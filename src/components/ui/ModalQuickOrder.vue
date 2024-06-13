@@ -17,7 +17,7 @@
             placeholder="John Doe" id="name" v-model.trim="name.val" @input="validateField(name)")
           small(v-if="name.error")  {{name.error}}
       div.mt10
-        button.primary.btn(@click="sendQuickOrder" :disabled="!(name.valid && phone.valid)") Order Now
+        button.primary.btn(@click="sendQuickOrder" :disabled="!(name.valid && phone.valid)" type="button") Order Now
     div.mt50(v-else)
       div.mb20 Customer Service Team will call you soon as possible, thanks for order
       button.primary.btn.block.center(@click="emit('close')") Ok

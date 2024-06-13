@@ -2,7 +2,7 @@
   ToggleSidebar(@toggleSideBar="UiStore.toggleSidebar()")
   CategorySide.category-side(:categories="UiStore.getAllCategories" :checkboxBestSeller="UiStore.getCheckboxBestSeller"
     :style="{left: UiStore.sidebar}").mt20
-  div.main-side
+  main.main-side
     h1.ml20 About Us
 </template>
 

@@ -2,7 +2,7 @@
   nav.navbar
     div(class="logo")
       router-link(to="/")
-        img(src="@/assets/lamotte.png" alt="Online Store")
+        img(src="@/assets/lamotte.png" alt="Online Store" width="140px" height="54px")
       h3(class="inline") Online Store
     div.navbar-menu
       ul.navbar-menu
@@ -16,12 +16,12 @@
           router-link(to="/about") About Us
       div(v-if="!AuthStore.isAuthentificated")
         router-link(to="/signin")
-          button.btn.main.mr20 Sign In
+          button.btn.main.mr20(type="button") Sign In
         router-link(to="/signup")
-          button.btn.white.mr20 Sign Up
+          button.btn.white.mr20(type="button") Sign Up
       div(v-else)
         router-link(to="/" @click="AuthStore.logout")
-          button.btn.white.mr20 Logout
+          button.btn.white.mr20(type="button") Logout
       router-link(to="/cart" class="main")
         fa(icon="shopping-cart" size="lg")
         span(class="cart-count") {{CartStore.getCartCount}}

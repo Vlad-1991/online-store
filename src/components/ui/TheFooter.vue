@@ -1,5 +1,5 @@
 <template lang="pug">
-  div.footer
+  footer.footer
     div.footer-social
       a(href="https://www.facebook.com/LaMotteCompany/" target="_blank")
         img(src="@/assets/social-facebook-gray.svg" alt="Facebook")

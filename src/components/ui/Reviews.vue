@@ -34,13 +34,14 @@
           div.mt10.rating-star
             label(for="review-area") Your review for this product (Optional)
             textarea.review-textarea.mt10(placeholder="Write review... 300 symbols max" id="review-area" v-model="reviewText" )
-          button.btn.main.mt10(:disabled="!ratingVote" @click="emit('sendReview', {reviewText: reviewText, ratingVote: ratingVote})") Send review
+          button.btn.main.mt10(:disabled="!ratingVote" @click="emit('sendReview', {reviewText: reviewText, ratingVote: ratingVote})"
+          type="button") Send review
   div(v-else)
     h1 Reviews
     div.reviews-back.mb20(@click="emit('backToProduct')") Back to Product
     span.mr10 To send rating and review please
     router-link(to="/signin")
-      button.btn.main Sign In
+      button.btn.main(type="button") Sign In
 </template>
 
 <!-- this component is rendering all current reviews and rating of product, and also contains form of voting and review form.

@@ -8,7 +8,7 @@
         :data-pswp-height="image.height"
         target="_blank"
         rel="noreferrer")
-      img(:src="imagesData[0].largeURL" alt="" v-if="key === 0" @load="$emit('imgLoaded')")
+      img(:src="imagesData[0].largeURL" alt="" v-if="key === 0" @load="$emit('imgLoaded')" :alt="name" width="500px" height="500px")
 </template>
 
 <!-- this component render beautiful gallery with one or many product images
@@ -21,6 +21,7 @@ import {imageType} from "@/utils/types/requestTypes";
 
 const props = defineProps<{
   galleryID: string,
+  name: string,
   images: [imageType]
 }>()
 
